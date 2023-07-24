@@ -16,7 +16,8 @@ export default function Page() {
 
   if (status === "unauthenticated") {
     router.push("api/auth/signin");
+    return;
   }
 
-  redirect("/profile");
+  router.push("/dashboard");
 }
