@@ -23,10 +23,13 @@ export default function NavBar() {
 						<Nav.Link href="/dashboard" className="mx-2">
 							Dashboard
 						</Nav.Link>
-						<Nav.Link className="mx-2" href="/">
+						<Nav.Link className="mx-2" href="/users">
+							Users
+						</Nav.Link>
+						<Nav.Link className="mx-2" href="/projects">
 							Projects
 						</Nav.Link>
-						<Nav.Link className="mx-2" href="/">
+						<Nav.Link className="mx-2" href="/tickets">
 							Tickets
 						</Nav.Link>
 						<Nav.Link className="mx-2" href="/profile">

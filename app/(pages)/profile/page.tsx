@@ -48,14 +48,14 @@ export default function ProfilePage() {
 	return (
 		<>
 			<NavBar />
-			<div className="flex h-screen items-center justify-center">
+			<div className="flex h-screen flex-col items-center justify-center sm:flex-row">
 				<div className="flex items-center">
 					<Image
 						src={user.image ?? "/logo.png"}
 						alt="Profile Picture"
 						width={110}
 						height={110}
-						className="mr-8 rounded-full"
+						className="mb-8 mr-8 rounded-full"
 					/>
 					<div>
 						<h1 className="text-xl">{user.name}</h1>
