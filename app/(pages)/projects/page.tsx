@@ -7,13 +7,23 @@ import { useSession } from "next-auth/react";
 import CreateProjectDialog, { FormValues } from "./CreateProjectDialog";
 
 function TableBody(
-	data: any,
+	data: Project[],
 	currPageIndex: number,
 	setOpenConfirmationDialog: (open: boolean) => void,
 	setProjectToDelete: (project: Project) => void
 ) {
 	const totalLength = data.length;
 	const rows = [];
+
+	if (totalLength === 0) {
+		return (
+			<tr className="border-b">
+				<td colSpan={3} className="text-center">
+					<p className="my-4">No Projects Found</p>
+				</td>
+			</tr>
+		);
+	}
 
 	for (let i = currPageIndex; i < currPageIndex + PAGE_SIZE && i < totalLength; i++) {
 		rows.push(
@@ -52,18 +62,6 @@ function LoadingTable() {
 			<tr className="border-b">
 				<td colSpan={3} className="text-center">
 					<p className="my-4">Loading...</p>
-				</td>
-			</tr>
-		</tbody>
-	);
-}
-
-function EmptyTable() {
-	return (
-		<tbody>
-			<tr className="border-b">
-				<td colSpan={3} className="text-center">
-					<p className="my-4">No projects found.</p>
 				</td>
 			</tr>
 		</tbody>
@@ -131,6 +129,10 @@ export default function ProjectsPage() {
 	const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
 
 	useEffect(() => {
+		if (!session?.user?.id) {
+			return;
+		}
+
 		fetchProjects({
 			userID: session?.user?.id,
 		}).then((data) => {
@@ -188,37 +190,35 @@ export default function ProjectsPage() {
 					{projects === undefined ? (
 						<LoadingTable />
 					) : (
-						(projects.length === 0 && <EmptyTable />) || (
-							<>
-								<tbody>
-									{TableBody(projects, pagesToShow, setOpenConfirmationDialog, setProjectToDelete)}
-								</tbody>
-								<tfoot>
-									<tr>
-										<td colSpan={2}>
-											Current Page: {Math.floor(pagesToShow / PAGE_SIZE) + 1} of{" "}
-											{Math.ceil(projects.length / PAGE_SIZE)}
-										</td>
-										<td className="mb-3 flex flex-col items-center justify-end text-right transition-all ease-in-out sm:flex-row">
-											<button
-												disabled={pagesToShow === 0}
-												className="mt-3 whitespace-nowrap rounded bg-teal-600 px-4 py-2 font-bold text-white hover:bg-teal-700 disabled:bg-gray-600 sm:mr-4"
-												onClick={() => setPagesToShow(pagesToShow - PAGE_SIZE)}
-											>
-												Previous Page
-											</button>
-											<button
-												disabled={pagesToShow + PAGE_SIZE >= projects.length}
-												className="mt-3 whitespace-nowrap rounded bg-teal-600 px-4 py-2 font-bold text-white transition-all ease-in-out hover:bg-teal-700 disabled:bg-gray-600"
-												onClick={() => setPagesToShow(pagesToShow + PAGE_SIZE)}
-											>
-												Next Page
-											</button>
-										</td>
-									</tr>
-								</tfoot>
-							</>
-						)
+						<>
+							<tbody>
+								{TableBody(projects, pagesToShow, setOpenConfirmationDialog, setProjectToDelete)}
+							</tbody>
+							<tfoot>
+								<tr>
+									<td colSpan={2}>
+										Current Page: {Math.floor(pagesToShow / PAGE_SIZE) + 1} of{" "}
+										{Math.ceil(projects.length / PAGE_SIZE)}
+									</td>
+									<td className="mb-3 flex flex-col items-center justify-end text-right transition-all ease-in-out sm:flex-row">
+										<button
+											disabled={pagesToShow === 0}
+											className="mt-3 whitespace-nowrap rounded bg-teal-600 px-4 py-2 font-bold text-white hover:bg-teal-700 disabled:bg-gray-600 sm:mr-4"
+											onClick={() => setPagesToShow(pagesToShow - PAGE_SIZE)}
+										>
+											Previous Page
+										</button>
+										<button
+											disabled={pagesToShow + PAGE_SIZE >= projects.length}
+											className="mt-3 whitespace-nowrap rounded bg-teal-600 px-4 py-2 font-bold text-white transition-all ease-in-out hover:bg-teal-700 disabled:bg-gray-600"
+											onClick={() => setPagesToShow(pagesToShow + PAGE_SIZE)}
+										>
+											Next Page
+										</button>
+									</td>
+								</tr>
+							</tfoot>
+						</>
 					)}
 				</table>
 				<div className="my-12">
