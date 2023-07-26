@@ -3,6 +3,7 @@ import Image from "next/image";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
+import Link from "next/link";
 
 export default function NavBar() {
 	return (
@@ -19,22 +20,22 @@ export default function NavBar() {
 				</Navbar.Brand>
 				<Navbar.Toggle aria-controls="basic-navbar-nav" />
 				<Navbar.Collapse id="basic-navbar-nav">
-					<Nav className="ml-auto text-center">
-						<Nav.Link href="/dashboard" className="mx-2">
+					<Nav className="ml-auto text-center text-zinc-400 ">
+						<Link href="/dashboard" className="mx-3 transition-all ease-in-out hover:text-zinc-200">
 							Dashboard
-						</Nav.Link>
-						<Nav.Link className="mx-2" href="/users">
+						</Link>
+						<Link className="mx-3 transition-all ease-in-out hover:text-zinc-200" href="/users">
 							Users
-						</Nav.Link>
-						<Nav.Link className="mx-2" href="/projects">
+						</Link>
+						<Link className="mx-3 transition-all ease-in-out hover:text-zinc-200" href="/projects">
 							Projects
-						</Nav.Link>
-						<Nav.Link className="mx-2" href="/tickets">
+						</Link>
+						<Link className="mx-3 transition-all ease-in-out hover:text-zinc-200" href="/tickets">
 							Tickets
-						</Nav.Link>
-						<Nav.Link className="mx-2" href="/profile">
+						</Link>
+						<Link className="mx-3 transition-all ease-in-out hover:text-zinc-200" href="/profile">
 							Profile
-						</Nav.Link>
+						</Link>
 					</Nav>
 				</Navbar.Collapse>
 			</Container>
