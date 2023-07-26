@@ -1,6 +1,10 @@
+"use client";
 import NavBar from "@/components/NavBar";
+import { useSession } from "next-auth/react";
 
 export default function TicketsPage() {
+	const { data: session } = useSession();
+
 	return (
 		<>
 			<NavBar />

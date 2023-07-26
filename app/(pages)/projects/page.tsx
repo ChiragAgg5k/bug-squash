@@ -1,12 +1,17 @@
 "use client";
 import NavBar from "@/components/NavBar";
 import { useEffect, useState } from "react";
-import { PAGE_SIZE, fetchProjects, postProject } from ".";
+import { PAGE_SIZE, deleteProject, fetchProjects, postProject } from ".";
 import { Project } from "@/app/types";
 import { useSession } from "next-auth/react";
-import CreateProjectDialog from "./CreateProjectDialog";
+import CreateProjectDialog, { FormValues } from "./CreateProjectDialog";
 
-function TableBody(data: any, currPageIndex: number) {
+function TableBody(
+	data: any,
+	currPageIndex: number,
+	setOpenConfirmationDialog: (open: boolean) => void,
+	setProjectToDelete: (project: Project) => void
+) {
 	const totalLength = data.length;
 	const rows = [];
 
@@ -18,13 +23,19 @@ function TableBody(data: any, currPageIndex: number) {
 					<p className="line-clamp-4">{data[i].description}</p>
 				</td>
 				<td className="px-4 py-2">
-					<button className="m-2 rounded bg-cyan-600 px-4 py-2 font-bold text-white hover:bg-cyan-700">
+					<button className="m-2 rounded bg-cyan-600 px-4 py-2 font-bold text-white transition-all ease-in-out hover:bg-cyan-700">
 						Details
 					</button>
-					<button className="m-2 rounded bg-teal-600 px-4 py-2 font-bold text-white hover:bg-teal-700">
+					<button className="ease-in-ou m-2 rounded bg-teal-600 px-4 py-2 font-bold text-white transition-all hover:bg-teal-700">
 						Edit
 					</button>
-					<button className="m-2 rounded bg-emerald-600 px-4 py-2 font-bold text-white hover:bg-emerald-700">
+					<button
+						onClick={() => {
+							setProjectToDelete(data[i]);
+							setOpenConfirmationDialog(true);
+						}}
+						className="ease-in-ou m-2 rounded bg-emerald-600 px-4 py-2 font-bold text-white transition-all hover:bg-emerald-700"
+					>
 						Delete
 					</button>
 				</td>
@@ -59,27 +70,82 @@ function EmptyTable() {
 	);
 }
 
+function ConfirmationDialog({
+	open,
+	setOpenDialog,
+	projectToDelete,
+	projects,
+}: {
+	open: boolean;
+	setOpenDialog: (open: boolean) => void;
+	projectToDelete: Project | undefined;
+	projects: Project[];
+}) {
+	return (
+		<div
+			className={`fixed left-0 top-0 z-10 h-screen w-screen items-center justify-center bg-black/70 ${
+				open ? "flex" : "hidden"
+			}
+				`}
+		>
+			<div className="border-3 relative rounded border-teal-400 bg-[#D6DBDC] p-10 dark:border-teal-700 dark:bg-zinc-800">
+				<h3 className="my-4 text-center text-xl sm:text-2xl">Delete Project ?</h3>
+				<div className="flex items-center justify-center">
+					<button
+						className="m-3 rounded bg-red-600 px-4 py-2 font-bold text-white hover:bg-red-700"
+						onClick={() => {
+							deleteProject({
+								projectId: projectToDelete?._id!,
+							}).then((data) => {
+								if (data.acknowledged) {
+									projectToDelete = undefined;
+									projects.splice(projects.indexOf(projectToDelete!), 1);
+									setOpenDialog(false);
+								}
+							});
+						}}
+					>
+						Yes
+					</button>
+					<button
+						className="m-3 rounded bg-emerald-600 px-4 py-2 font-bold text-white hover:bg-emerald-700"
+						onClick={() => {
+							setOpenDialog(false);
+						}}
+					>
+						Cancel
+					</button>
+				</div>
+			</div>
+		</div>
+	);
+}
+
 export default function ProjectsPage() {
 	const [pagesToShow, setPagesToShow] = useState(0);
 	const [projects, setProjects] = useState<Project[] | undefined>(undefined);
 	const [openDialog, setOpenDialog] = useState(false);
 	const { data: session } = useSession();
 
+	const [projectToDelete, setProjectToDelete] = useState<Project | undefined>(undefined);
+	const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+
 	useEffect(() => {
-		fetchProjects().then((data) => {
+		fetchProjects({
+			userID: session?.user?.id,
+		}).then((data) => {
 			setProjects(data);
 		});
-	}, []);
+	}, [session?.user?.id]);
 
-	const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+	const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>, formValues: FormValues) => {
 		e.preventDefault();
 
 		if (!session?.user?.id || projects === undefined) {
 			return;
 		}
 
-		const name = (e.currentTarget.elements.namedItem("name") as HTMLInputElement).value;
-		const description = (e.currentTarget.elements.namedItem("description") as HTMLInputElement).value;
+		const { name, description } = formValues;
 		const userID = session.user.id;
 
 		const project = await postProject({
@@ -124,14 +190,16 @@ export default function ProjectsPage() {
 					) : (
 						(projects.length === 0 && <EmptyTable />) || (
 							<>
-								<tbody>{TableBody(projects, pagesToShow)}</tbody>
+								<tbody>
+									{TableBody(projects, pagesToShow, setOpenConfirmationDialog, setProjectToDelete)}
+								</tbody>
 								<tfoot>
 									<tr>
 										<td colSpan={2}>
 											Current Page: {Math.floor(pagesToShow / PAGE_SIZE) + 1} of{" "}
 											{Math.ceil(projects.length / PAGE_SIZE)}
 										</td>
-										<td className="mb-3 flex flex-col items-center justify-end text-right sm:flex-row">
+										<td className="mb-3 flex flex-col items-center justify-end text-right transition-all ease-in-out sm:flex-row">
 											<button
 												disabled={pagesToShow === 0}
 												className="mt-3 whitespace-nowrap rounded bg-teal-600 px-4 py-2 font-bold text-white hover:bg-teal-700 disabled:bg-gray-600 sm:mr-4"
@@ -141,7 +209,7 @@ export default function ProjectsPage() {
 											</button>
 											<button
 												disabled={pagesToShow + PAGE_SIZE >= projects.length}
-												className="mt-3 whitespace-nowrap rounded bg-teal-600 px-4 py-2 font-bold text-white hover:bg-teal-700 disabled:bg-gray-600"
+												className="mt-3 whitespace-nowrap rounded bg-teal-600 px-4 py-2 font-bold text-white transition-all ease-in-out hover:bg-teal-700 disabled:bg-gray-600"
 												onClick={() => setPagesToShow(pagesToShow + PAGE_SIZE)}
 											>
 												Next Page
@@ -153,9 +221,9 @@ export default function ProjectsPage() {
 						)
 					)}
 				</table>
-				<div className="mt-8">
+				<div className="my-12">
 					<button
-						className="rounded bg-teal-600 px-4 py-2 font-bold text-white hover:bg-teal-700"
+						className="rounded bg-teal-600 px-4 py-2 font-bold text-white transition-all ease-in-out hover:bg-teal-700"
 						onClick={() => {
 							setOpenDialog(true);
 						}}
@@ -164,10 +232,15 @@ export default function ProjectsPage() {
 					</button>
 				</div>
 				<CreateProjectDialog
-					userID={session?.user?.id}
 					handleFormSubmit={handleFormSubmit}
 					open={openDialog}
 					setOpenDialog={setOpenDialog}
+				/>
+				<ConfirmationDialog
+					projects={projects ?? []}
+					open={openConfirmationDialog}
+					setOpenDialog={setOpenConfirmationDialog}
+					projectToDelete={projectToDelete}
 				/>
 			</div>
 		</>
