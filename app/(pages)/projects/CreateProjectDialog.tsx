@@ -1,6 +1,3 @@
-import { useState } from "react";
-import { postProject } from ".";
-import { useRouter } from "next/navigation";
 import { AiFillCloseSquare } from "react-icons/ai";
 
 export default function CreateProjectDialog({
@@ -21,14 +18,16 @@ export default function CreateProjectDialog({
 			}
 				`}
 		>
-			<div className="relative mx-12 w-full max-w-3xl rounded border-2 border-teal-700 bg-zinc-800 p-16">
-				<AiFillCloseSquare
-					onClick={() => {
-						setOpenDialog(false);
-					}}
-					className="absolute right-2 top-2 cursor-pointer text-4xl hover:text-teal-700"
-				/>
-				<h3 className="mb-4 text-2xl">Create New Project</h3>
+			<div className="relative mx-12 w-full max-w-3xl rounded border-2 border-teal-700 bg-zinc-800 p-6 sm:p-10">
+				<div className="mb-8 flex items-center justify-between">
+					<h3 className="text-xl sm:text-2xl">Create New Project</h3>
+					<AiFillCloseSquare
+						onClick={() => {
+							setOpenDialog(false);
+						}}
+						className=" cursor-pointer text-4xl hover:text-teal-700"
+					/>
+				</div>
 				<form onSubmit={handleFormSubmit}>
 					<div className="mb-4">
 						<label htmlFor="name" className="block text-sm font-medium text-gray-400">
@@ -53,6 +52,8 @@ export default function CreateProjectDialog({
 							id="description"
 							required
 							rows={3}
+							minLength={10}
+							maxLength={500}
 							className="mt-1 block w-full rounded-md border-gray-300 p-4 text-black shadow-sm focus:border-teal-500 focus:ring-teal-500 sm:text-sm"
 							placeholder="Project Description"
 						/>

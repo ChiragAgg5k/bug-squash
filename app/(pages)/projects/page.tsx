@@ -14,15 +14,17 @@ function TableBody(data: any, currPageIndex: number) {
 		rows.push(
 			<tr key={i} className="border-b">
 				<td className="px-4 py-2">{data[i].name}</td>
-				<td className="px-4 py-2">{data[i].description}</td>
+				<td className="px-4 py-4">
+					<p className="line-clamp-4">{data[i].description}</p>
+				</td>
 				<td className="px-4 py-2">
-					<button className="mr-4 rounded bg-cyan-600 px-4 py-2 font-bold text-white hover:bg-cyan-700">
+					<button className="m-2 rounded bg-cyan-600 px-4 py-2 font-bold text-white hover:bg-cyan-700">
 						Details
 					</button>
-					<button className="mr-4 rounded bg-teal-600 px-4 py-2 font-bold text-white hover:bg-teal-700">
+					<button className="m-2 rounded bg-teal-600 px-4 py-2 font-bold text-white hover:bg-teal-700">
 						Edit
 					</button>
-					<button className="rounded bg-emerald-600 px-4 py-2 font-bold text-white hover:bg-emerald-700">
+					<button className="m-2 rounded bg-emerald-600 px-4 py-2 font-bold text-white hover:bg-emerald-700">
 						Delete
 					</button>
 				</td>
@@ -129,17 +131,17 @@ export default function ProjectsPage() {
 											Current Page: {Math.floor(pagesToShow / PAGE_SIZE) + 1} of{" "}
 											{Math.ceil(projects.length / PAGE_SIZE)}
 										</td>
-										<td className="text-right">
+										<td className="mb-3 flex flex-col items-center justify-end text-right sm:flex-row">
 											<button
 												disabled={pagesToShow === 0}
-												className="my-4 mr-4 rounded bg-teal-600 px-4 py-2 font-bold text-white hover:bg-teal-700 disabled:bg-gray-600"
+												className="mt-3 whitespace-nowrap rounded bg-teal-600 px-4 py-2 font-bold text-white hover:bg-teal-700 disabled:bg-gray-600 sm:mr-4"
 												onClick={() => setPagesToShow(pagesToShow - PAGE_SIZE)}
 											>
 												Previous Page
 											</button>
 											<button
 												disabled={pagesToShow + PAGE_SIZE >= projects.length}
-												className="rounded bg-teal-600 px-4 py-2 font-bold text-white hover:bg-teal-700 disabled:bg-gray-600"
+												className="mt-3 whitespace-nowrap rounded bg-teal-600 px-4 py-2 font-bold text-white hover:bg-teal-700 disabled:bg-gray-600"
 												onClick={() => setPagesToShow(pagesToShow + PAGE_SIZE)}
 											>
 												Next Page

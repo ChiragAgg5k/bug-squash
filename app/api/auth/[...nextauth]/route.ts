@@ -2,9 +2,11 @@ import { env } from "@/env";
 import NextAuth from "next-auth/next";
 import GoogleProvider from "next-auth/providers/google";
 import GitHubProvider from "next-auth/providers/github";
+import CredentialsProvider from "next-auth/providers/credentials";
 import { NextAuthOptions, User } from "next-auth";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "@/mongodb/config";
+import { hash } from "bcrypt";
 
 const authOptions: NextAuthOptions = {
 	session: {
