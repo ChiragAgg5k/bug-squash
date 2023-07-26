@@ -1,45 +1,13 @@
-"use client";
 import NavBar from "@/components/NavBar";
-import { Session } from "next-auth";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import ContentLoader from "react-content-loader";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
-export default function Dashboard() {
-	const { data: session, status } = useSession();
-	const [user, setUser] = useState<Session["user"] | undefined>(undefined);
-	const router = useRouter();
+export default async function Dashboard() {
+	const session = await getServerSession();
+	const user = session?.user;
 
-	useEffect(() => {
-		if (session && session.user) {
-			setUser(session.user);
-		}
-
-		if (status === "unauthenticated") {
-			router.push("/api/auth/signin");
-		}
-	}, [session, status, router]);
-
-	if (status === "loading" || !user) {
-		return (
-			<>
-				<NavBar />
-				<div className="pt-28">
-					<ContentLoader
-						height={140}
-						width={740}
-						speed={1}
-						className="ml-8"
-						backgroundColor={"#333"}
-						foregroundColor={"#999"}
-						viewBox="0 0 380 70"
-					>
-						<rect x="0" y="0" rx="4" ry="4" width="150" height="13" />
-					</ContentLoader>
-				</div>
-			</>
-		);
+	if (!user) {
+		redirect("/api/auth/signin");
 	}
 
 	return (

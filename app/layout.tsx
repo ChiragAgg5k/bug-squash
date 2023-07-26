@@ -3,6 +3,7 @@ import "./globals.css";
 import type { Metadata } from "next";
 import { Ubuntu } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.css";
+import NextTopLoader from "nextjs-toploader";
 
 const ubuntu = Ubuntu({
 	weight: "400",
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					<link rel="manifest" href="/site.webmanifest" />
 				</head>
 				<body suppressHydrationWarning={true} className={ubuntu.className}>
+					<NextTopLoader showSpinner={false} color="#0f766e" />
 					{children}
 				</body>
 			</NextAuthProvider>
