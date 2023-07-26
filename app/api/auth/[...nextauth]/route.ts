@@ -6,7 +6,7 @@ import { NextAuthOptions, User } from "next-auth";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from "@/mongodb/config";
 
-export const authOptions: NextAuthOptions = {
+const authOptions: NextAuthOptions = {
 	session: {
 		strategy: "jwt",
 	},
