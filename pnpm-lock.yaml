@@ -12,8 +12,8 @@ dependencies:
     specifier: 20.4.5
     version: 20.4.5
   '@types/react':
-    specifier: 18.2.16
-    version: 18.2.16
+    specifier: 18.2.17
+    version: 18.2.17
   '@types/react-dom':
     specifier: 18.2.7
     version: 18.2.7
@@ -24,8 +24,8 @@ dependencies:
     specifier: ^5.1.0
     version: 5.1.0
   bootstrap:
-    specifier: ^5.3.0
-    version: 5.3.0(@popperjs/core@2.11.8)
+    specifier: ^5.3.1
+    version: 5.3.1(@popperjs/core@2.11.8)
   eslint:
     specifier: 8.45.0
     version: 8.45.0
@@ -58,7 +58,7 @@ dependencies:
     version: 18.2.0
   react-bootstrap:
     specifier: ^2.8.0
-    version: 2.8.0(@types/react@18.2.16)(react-dom@18.2.0)(react@18.2.0)
+    version: 2.8.0(@types/react@18.2.17)(react-dom@18.2.0)(react@18.2.0)
   react-content-loader:
     specifier: ^6.2.1
     version: 6.2.1(react@18.2.0)
@@ -444,17 +444,17 @@ packages:
   /@types/react-dom@18.2.7:
     resolution: {integrity: sha512-GRaAEriuT4zp9N4p1i8BDBYmEyfo+xQ3yHjJU4eiK5NDa1RmUZG+unZABUTK4/Ox/M+GaHwb6Ow8rUITrtjszA==}
     dependencies:
-      '@types/react': 18.2.16
+      '@types/react': 18.2.17
     dev: false
 
   /@types/react-transition-group@4.4.6:
     resolution: {integrity: sha512-VnCdSxfcm08KjsJVQcfBmhEQAPnLB8G08hAxn39azX1qYBQ/5RVQuoHuKIcfKOdncuaUvEpFKFzEvbtIMsfVew==}
     dependencies:
-      '@types/react': 18.2.16
+      '@types/react': 18.2.17
     dev: false
 
-  /@types/react@18.2.16:
-    resolution: {integrity: sha512-LLFWr12ZhBJ4YVw7neWLe6Pk7Ey5R9OCydfuMsz1L8bZxzaawJj2p06Q8/EFEHDeTBQNFLF62X+CG7B2zIyu0Q==}
+  /@types/react@18.2.17:
+    resolution: {integrity: sha512-u+e7OlgPPh+aryjOm5UJMX32OvB2E3QASOAqVMY6Ahs90djagxwv2ya0IctglNbNTexC12qCSMZG47KPfy1hAA==}
     dependencies:
       '@types/prop-types': 15.7.5
       '@types/scheduler': 0.16.3
@@ -771,10 +771,10 @@ packages:
       readable-stream: 3.6.2
     dev: false
 
-  /bootstrap@5.3.0(@popperjs/core@2.11.8):
-    resolution: {integrity: sha512-UnBV3E3v4STVNQdms6jSGO2CvOkjUMdDAVR2V5N4uCMdaIkaQjbcEAMqRimDHIs4uqBYzDAKCQwCB+97tJgHQw==}
+  /bootstrap@5.3.1(@popperjs/core@2.11.8):
+    resolution: {integrity: sha512-jzwza3Yagduci2x0rr9MeFSORjcHpt0lRZukZPZQJT1Dth5qzV7XcgGqYzi39KGAVYR8QEDVoO0ubFKOxzMG+g==}
     peerDependencies:
-      '@popperjs/core': ^2.11.7
+      '@popperjs/core': ^2.11.8
     dependencies:
       '@popperjs/core': 2.11.8
     dev: false
@@ -2904,7 +2904,7 @@ packages:
       strip-json-comments: 2.0.1
     dev: false
 
-  /react-bootstrap@2.8.0(@types/react@18.2.16)(react-dom@18.2.0)(react@18.2.0):
+  /react-bootstrap@2.8.0(@types/react@18.2.17)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-e/aNtxl0Z2ozrIaR82jr6Zz7ss9GSoaXpQaxmvtDUsTZIq/XalkduR/ZXP6vbQHz2T4syvjA+4FbtwELxxmpww==}
     peerDependencies:
       '@types/react': '>=16.14.8'
@@ -2917,7 +2917,7 @@ packages:
       '@babel/runtime': 7.22.6
       '@restart/hooks': 0.4.11(react@18.2.0)
       '@restart/ui': 1.6.6(react-dom@18.2.0)(react@18.2.0)
-      '@types/react': 18.2.16
+      '@types/react': 18.2.17
       '@types/react-transition-group': 4.4.6
       classnames: 2.3.2
       dom-helpers: 5.2.1
@@ -3601,7 +3601,7 @@ packages:
       react: '>=15.0.0'
     dependencies:
       '@babel/runtime': 7.22.6
-      '@types/react': 18.2.16
+      '@types/react': 18.2.17
       invariant: 2.2.4
       react: 18.2.0
       react-lifecycles-compat: 3.0.4

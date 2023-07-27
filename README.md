@@ -1,17 +1,16 @@
-# Bug Squash
+<h1 align="center">
+   Bug Squash
+</h1>
+
+Bug Squash is a bug tracking application that allows users to list their projects, assign their teammates to projects, and create tickets for bugs that need to be fixed. Users can also comment on tickets and mark them as completed. It has a simple and intuitive user interface that allows users to easily navigate the application and keep track of their projects and tickets.
 
 ## Table of Contents
 
 -   [Bug Squash](#bug-squash)
     -   [Table of Contents](#table-of-contents)
-    -   [Description](#description)
     -   [Installation and Usage](#installation-and-usage)
     -   [Contributing](#contributing)
     -   [License](#license)
-
-## Description
-
-Bug Squash is a bug tracking application that allows users to list their projects, assign their teammates to projects, and create tickets for bugs that need to be fixed. Users can also comment on tickets and mark them as completed. It has a simple and intuitive user interface that allows users to easily navigate the application and keep track of their projects and tickets.
 
 ## Installation and Usage
 
