@@ -1,6 +1,6 @@
 "use client";
 import NavBar from "@/components/NavBar";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { PAGE_SIZE, deleteProject, fetchProjects, postProject } from ".";
 import { Project } from "@/app/types";
 import { useSession } from "next-auth/react";

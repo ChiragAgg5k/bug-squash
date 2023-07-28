@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { AiFillCloseSquare } from "react-icons/ai";
 
 export interface FormValues {
