@@ -5,12 +5,15 @@ import { PAGE_SIZE, deleteProject, fetchProjects, postProject } from ".";
 import { Project } from "@/app/types";
 import { useSession } from "next-auth/react";
 import CreateProjectDialog, { FormValues } from "./CreateProjectDialog";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 function TableBody(
 	data: Project[],
 	currPageIndex: number,
 	setOpenConfirmationDialog: (open: boolean) => void,
-	setProjectToDelete: (project: Project) => void
+	setProjectToDelete: (project: Project) => void,
+	router: ReturnType<typeof useRouter>
 ) {
 	const totalLength = data.length;
 	const rows = [];
@@ -33,18 +36,15 @@ function TableBody(
 					<p className="line-clamp-4">{data[i].description}</p>
 				</td>
 				<td className="px-4 py-2">
-					<button className="m-2 rounded bg-cyan-600 px-4 py-2 font-bold text-white transition-all ease-in-out hover:bg-cyan-700">
+					<Link href={`/projects/${data[i]._id}`} className="btn btn-outline mr-4">
 						Details
-					</button>
-					<button className="ease-in-ou m-2 rounded bg-teal-600 px-4 py-2 font-bold text-white transition-all hover:bg-teal-700">
-						Edit
-					</button>
+					</Link>
 					<button
 						onClick={() => {
 							setProjectToDelete(data[i]);
 							setOpenConfirmationDialog(true);
 						}}
-						className="ease-in-ou m-2 rounded bg-emerald-600 px-4 py-2 font-bold text-white transition-all hover:bg-emerald-700"
+						className="btn btn-accent btn-outline"
 					>
 						Delete
 					</button>
@@ -87,7 +87,8 @@ function ConfirmationDialog({
 				`}
 		>
 			<div className="border-3 relative rounded border-teal-400 bg-[#D6DBDC] p-10 dark:border-teal-700 dark:bg-zinc-800">
-				<h3 className="my-4 text-center text-xl sm:text-2xl">Delete Project ?</h3>
+				<h3 className="my-3 text-center text-xl sm:text-2xl">Delete Project</h3>
+				<p className="mb-3">Are you sure you want to delete the project?</p>
 				<div className="flex items-center justify-center">
 					<button
 						className="m-3 rounded bg-red-600 px-4 py-2 font-bold text-white hover:bg-red-700"
@@ -123,6 +124,7 @@ export default function ProjectsPage() {
 	const [pagesToShow, setPagesToShow] = useState(0);
 	const [projects, setProjects] = useState<Project[] | undefined>(undefined);
 	const [openDialog, setOpenDialog] = useState(false);
+	const router = useRouter();
 	const { data: session } = useSession();
 
 	const [projectToDelete, setProjectToDelete] = useState<Project | undefined>(undefined);
@@ -173,7 +175,7 @@ export default function ProjectsPage() {
 	};
 
 	return (
-		<>
+		<div className="min-h-screen">
 			<NavBar />
 			<div className="mx-8 pt-28">
 				<h1 className="mb-4 text-2xl">Your Projects</h1>
@@ -192,7 +194,13 @@ export default function ProjectsPage() {
 					) : (
 						<>
 							<tbody>
-								{TableBody(projects, pagesToShow, setOpenConfirmationDialog, setProjectToDelete)}
+								{TableBody(
+									projects,
+									pagesToShow,
+									setOpenConfirmationDialog,
+									setProjectToDelete,
+									router
+								)}
 							</tbody>
 							<tfoot>
 								<tr>
@@ -200,17 +208,18 @@ export default function ProjectsPage() {
 										Current Page: {Math.floor(pagesToShow / PAGE_SIZE) + 1} of{" "}
 										{Math.ceil(projects.length / PAGE_SIZE)}
 									</td>
-									<td className="mb-3 flex flex-col items-center justify-end text-right transition-all ease-in-out sm:flex-row">
+									<td className="flex flex-col items-center justify-end text-right transition-all ease-in-out sm:flex-row">
 										<button
 											disabled={pagesToShow === 0}
-											className="mt-3 whitespace-nowrap rounded bg-teal-600 px-4 py-2 font-bold text-white hover:bg-teal-700 disabled:bg-gray-600 sm:mr-4"
+											className="btn btn-accent m-3 disabled:btn-neutral"
 											onClick={() => setPagesToShow(pagesToShow - PAGE_SIZE)}
 										>
 											Previous Page
 										</button>
 										<button
 											disabled={pagesToShow + PAGE_SIZE >= projects.length}
-											className="mt-3 whitespace-nowrap rounded bg-teal-600 px-4 py-2 font-bold text-white transition-all ease-in-out hover:bg-teal-700 disabled:bg-gray-600"
+											className="btn btn-accent mb-3 disabled:btn-neutral sm:m-3"
+											// className="mt-3 whitespace-nowrap rounded bg-teal-600 px-4 py-2 font-bold text-white transition-all ease-in-out hover:bg-teal-700 disabled:bg-gray-600"
 											onClick={() => setPagesToShow(pagesToShow + PAGE_SIZE)}
 										>
 											Next Page
@@ -221,9 +230,9 @@ export default function ProjectsPage() {
 						</>
 					)}
 				</table>
-				<div className="my-12">
+				<div className="py-12">
 					<button
-						className="rounded bg-teal-600 px-4 py-2 font-bold text-white transition-all ease-in-out hover:bg-teal-700"
+						className="btn btn-accent"
 						onClick={() => {
 							setOpenDialog(true);
 						}}
@@ -243,6 +252,6 @@ export default function ProjectsPage() {
 					projectToDelete={projectToDelete}
 				/>
 			</div>
-		</>
+		</div>
 	);
 }

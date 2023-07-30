@@ -10,30 +10,24 @@ export default function NavBar() {
 		<Navbar expand="sm" className="absolute w-full" bg="dark" data-bs-theme="dark">
 			<Container fluid className="mx-2">
 				<Navbar.Brand href="/">
-					<Image
-						src="/logo.png"
-						alt="Logo"
-						width={55}
-						height={55}
-						className="rounded-full border-2 border-gray-600"
-					/>
+					<Image src="/logo.png" alt="Logo" width={55} height={55} className="rounded-full" />
 				</Navbar.Brand>
 				<Navbar.Toggle aria-controls="basic-navbar-nav" />
 				<Navbar.Collapse id="basic-navbar-nav">
 					<Nav className="ml-auto text-center text-zinc-400 ">
-						<Link href="/dashboard" className="mx-3 transition-all ease-in-out hover:text-zinc-200">
+						<Link href="/dashboard" className="mx-3 my-2 transition-all ease-in-out hover:text-zinc-200">
 							Dashboard
 						</Link>
-						<Link className="mx-3 transition-all ease-in-out hover:text-zinc-200" href="/users">
+						<Link className="mx-3 my-2 transition-all ease-in-out hover:text-zinc-200" href="/users">
 							Users
 						</Link>
-						<Link className="mx-3 transition-all ease-in-out hover:text-zinc-200" href="/projects">
+						<Link className="mx-3 my-2 transition-all ease-in-out hover:text-zinc-200" href="/projects">
 							Projects
 						</Link>
-						<Link className="mx-3 transition-all ease-in-out hover:text-zinc-200" href="/tickets">
+						<Link className="mx-3 my-2 transition-all ease-in-out hover:text-zinc-200" href="/tickets">
 							Tickets
 						</Link>
-						<Link className="mx-3 transition-all ease-in-out hover:text-zinc-200" href="/profile">
+						<Link className="mx-3 my-2 transition-all ease-in-out hover:text-zinc-200" href="/profile">
 							Profile
 						</Link>
 					</Nav>

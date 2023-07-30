@@ -1,8 +1,9 @@
 import NavBar from "@/components/NavBar";
 import Image from "next/image";
-import { SignOutButton } from "@/components/authButtons";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
+import { signOut } from "next-auth/react";
+import SignoutButton from "./SignoutButton";
 
 export default async function ProfilePage() {
 	const session = await getServerSession();
@@ -30,7 +31,7 @@ export default async function ProfilePage() {
 					</div>
 				</div>
 
-				<SignOutButton className="mt-2 rounded bg-cyan-700 px-6 py-2 text-white hover:bg-cyan-600 sm:ml-12" />
+				<SignoutButton />
 			</div>
 		</>
 	);
