@@ -32,6 +32,7 @@ export default function AddUserModal() {
 			userEmail: user.email,
 			userRole: user.role,
 			assigneesId: session.user.id,
+			assignedProjects: [],
 		});
 
 		if (res.acknowledged) {
@@ -73,13 +74,14 @@ export default function AddUserModal() {
 						placeholder="Email"
 					/>
 					<select
+						required
 						onChange={(e) => {
 							setUser({ ...user, role: e.target.value });
 						}}
 						className="select select-bordered mb-4 block w-full max-w-xs"
 					>
-						<option disabled selected>
-							{"Select User's Role"}
+						<option selected disabled>
+							Select Role
 						</option>
 						<option>Admin</option>
 						<option>Developer</option>

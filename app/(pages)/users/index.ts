@@ -3,11 +3,13 @@ export async function postUser({
 	userEmail,
 	userRole,
 	assigneesId,
+	assignedProjects,
 }: {
 	userName: string;
 	userEmail: string;
 	userRole: string;
 	assigneesId: string;
+	assignedProjects: string[];
 }) {
 	const user = await fetch("/api/users", {
 		method: "POST",
@@ -19,6 +21,7 @@ export async function postUser({
 			userEmail,
 			userRole,
 			assigneesId,
+			assignedProjects,
 		}),
 	});
 

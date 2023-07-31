@@ -15,7 +15,7 @@ interface fetchedUser {
 
 export default function UsersTable() {
 	const { data: session } = useSession();
-	const [users, setUsers] = useState<fetchedUser[]>([]);
+	const [users, setUsers] = useState<fetchedUser[] | undefined>(undefined);
 
 	useEffect(() => {
 		if (!session) return;
@@ -28,6 +28,14 @@ export default function UsersTable() {
 			setUsers(res);
 		});
 	}, [session]);
+
+	if (!users) {
+		return <p className="col-span-3 my-4 text-center">Loading...</p>;
+	}
+
+	if (users.length === 0) {
+		return <p className="col-span-3 my-4 text-center">No users found</p>;
+	}
 
 	return (
 		<>
