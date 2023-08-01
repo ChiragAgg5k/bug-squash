@@ -7,7 +7,9 @@
 		"build": "next build",
 		"start": "next start",
 		"lint": "next lint",
-		"pretty": "prettier --write ."
+		"pretty": "prettier --write .",
+		"test:e2e": "playwright test",
+		"test:e2e:ui": "playwright test --ui"
 	},
 	"dependencies": {
 		"@auth/mongodb-adapter": "^1.0.0",
@@ -17,7 +19,6 @@
 		"autoprefixer": "10.4.14",
 		"bcrypt": "^5.1.0",
 		"bootstrap": "^5.3.1",
-		"classnames": "^2.3.2",
 		"daisyui": "^3.5.0",
 		"eslint": "8.45.0",
 		"eslint-config-next": "13.4.12",
@@ -39,6 +40,7 @@
 		"zod": "^3.21.4"
 	},
 	"devDependencies": {
+		"@playwright/test": "^1.36.2",
 		"@types/bcrypt": "^5.0.0"
 	}
 }
