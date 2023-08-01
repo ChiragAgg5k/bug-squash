@@ -5,15 +5,13 @@ import { PAGE_SIZE, deleteProject, fetchProjects, postProject } from ".";
 import { Project } from "@/app/types";
 import { useSession } from "next-auth/react";
 import CreateProjectDialog, { FormValues } from "./CreateProjectDialog";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 function TableBody(
 	data: Project[],
 	currPageIndex: number,
 	setOpenConfirmationDialog: (open: boolean) => void,
-	setProjectToDelete: (project: Project) => void,
-	router: ReturnType<typeof useRouter>
+	setProjectToDelete: (project: Project) => void
 ) {
 	const totalLength = data.length;
 	const rows = [];
@@ -123,8 +121,6 @@ function ConfirmationDialog({
 export default function ProjectsPage() {
 	const [pagesToShow, setPagesToShow] = useState(0);
 	const [projects, setProjects] = useState<Project[] | undefined>(undefined);
-	const [openDialog, setOpenDialog] = useState(false);
-	const router = useRouter();
 	const { data: session } = useSession();
 
 	const [projectToDelete, setProjectToDelete] = useState<Project | undefined>(undefined);
@@ -141,38 +137,6 @@ export default function ProjectsPage() {
 			setProjects(data);
 		});
 	}, [session?.user?.id]);
-
-	const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>, formValues: FormValues) => {
-		e.preventDefault();
-
-		if (!session?.user?.id || projects === undefined) {
-			return;
-		}
-
-		const { name, description } = formValues;
-		const userID = session.user.id;
-
-		const project = await postProject({
-			name,
-			description,
-			userID,
-		});
-
-		if (!project.acknowledged) {
-			return;
-		}
-
-		setOpenDialog(false);
-		setProjects([
-			...projects,
-			{
-				_id: project.insertedId,
-				name: name,
-				description: description,
-				userID: userID,
-			},
-		]);
-	};
 
 	return (
 		<div className="min-h-screen">
@@ -194,13 +158,7 @@ export default function ProjectsPage() {
 					) : (
 						<>
 							<tbody>
-								{TableBody(
-									projects,
-									pagesToShow,
-									setOpenConfirmationDialog,
-									setProjectToDelete,
-									router
-								)}
+								{TableBody(projects, pagesToShow, setOpenConfirmationDialog, setProjectToDelete)}
 							</tbody>
 							<tfoot>
 								<tr>
@@ -230,21 +188,7 @@ export default function ProjectsPage() {
 						</>
 					)}
 				</table>
-				<div className="py-12">
-					<button
-						className="btn btn-accent"
-						onClick={() => {
-							setOpenDialog(true);
-						}}
-					>
-						Create New Project
-					</button>
-				</div>
-				<CreateProjectDialog
-					handleFormSubmit={handleFormSubmit}
-					open={openDialog}
-					setOpenDialog={setOpenDialog}
-				/>
+				<CreateProjectDialog userID={session?.user.id} />
 				<ConfirmationDialog
 					projects={projects ?? []}
 					open={openConfirmationDialog}
