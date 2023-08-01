@@ -56,16 +56,16 @@ export default function AssignUserModal({ projectId }: { projectId: string }) {
 
 	return (
 		<>
-			<button className="btn btn-accent font-bold" onClick={() => (window as any).my_modal_2.showModal()}>
+			<button className="btn btn-accent font-bold" onClick={() => (window as any).assign_user_modal.showModal()}>
 				Edit Users
 			</button>
-			<dialog id="my_modal_2" className="modal">
+			<dialog id="assign_user_modal" className="modal">
 				<form
 					method="dialog"
 					className="modal-box w-11/12 max-w-5xl p-8"
 					onSubmit={(e) => {
 						e.preventDefault();
-						handleSubmit(assignedUsers).then(() => (window as any).my_modal_2.close());
+						handleSubmit(assignedUsers).then(() => (window as any).assign_user_modal.close());
 					}}
 				>
 					<div className="mb-3 grid grid-cols-4">

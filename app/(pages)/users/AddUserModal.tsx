@@ -42,16 +42,19 @@ export default function AddUserModal() {
 
 	return (
 		<>
-			<button className="btn btn-accent ml-8 font-bold" onClick={() => (window as any).my_modal_2.showModal()}>
+			<button
+				className="btn btn-accent ml-8 font-bold"
+				onClick={() => (window as any).add_user_modal.showModal()}
+			>
 				Add User
 			</button>
-			<dialog id="my_modal_2" className="modal">
+			<dialog id="add_user_modal" className="modal">
 				<form
 					method="dialog"
 					className="modal-box p-10"
 					onSubmit={(e) => {
 						e.preventDefault();
-						handleSubmit(user, session).then(() => (window as any).my_modal_2.close());
+						handleSubmit(user, session).then(() => (window as any).add_user_modal.close());
 					}}
 				>
 					<h3 className="mb-4 text-xl font-bold">Add New User</h3>
