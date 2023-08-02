@@ -26,7 +26,8 @@ export async function postProject({
 	return data;
 }
 
-export async function deleteProject({ projectId }: { projectId: string }) {
+export async function deleteProject({ projectId }: { projectId: string | undefined }) {
+	if (!projectId) return;
 	const response = await fetch(`/api/projects/?projectId=${projectId}`, {
 		method: "DELETE",
 	});

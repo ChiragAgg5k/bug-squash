@@ -19,3 +19,11 @@ export interface AssignedUser {
 export interface AssignedUserList extends AssignedUser {
 	assigned: boolean;
 }
+
+export interface fetchedUser {
+	_id: ObjectId;
+	userName: string;
+	userEmail: string;
+	userRole: string;
+	assigneesId: string;
+}

@@ -1,3 +1,5 @@
+import { ObjectId } from "mongodb";
+
 export async function postUser({
 	userName,
 	userEmail,
@@ -31,6 +33,14 @@ export async function postUser({
 
 export async function fetchUsers({ assigneesId }: { assigneesId: string }) {
 	const response = await fetch(`/api/users?assigneesId=${assigneesId}`);
+	const data = await response.json();
+	return data;
+}
+
+export async function deleteUser({ userId }: { userId: string }) {
+	const response = await fetch(`/api/users?userId=${userId}`, {
+		method: "DELETE",
+	});
 	const data = await response.json();
 	return data;
 }

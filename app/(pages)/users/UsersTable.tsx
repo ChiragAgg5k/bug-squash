@@ -3,15 +3,8 @@
 import { useSession } from "next-auth/react";
 import { fetchUsers } from ".";
 import { useEffect, useState } from "react";
-import { ObjectId } from "mongodb";
-
-interface fetchedUser {
-	_id: ObjectId;
-	userName: string;
-	userEmail: string;
-	userRole: string;
-	assigneesId: string;
-}
+import { fetchedUser } from "@/app/types";
+import DeleteUserModal from "./DeleteUserModal";
 
 const HEADERS = ["User", "Email", "Role", "Options"];
 
@@ -33,11 +26,43 @@ export default function UsersTable() {
 	}, [session]);
 
 	if (!users) {
-		return <p className="col-span-3 my-4 text-center">Loading...</p>;
+		return (
+			<>
+				<div className="my-4 grid grid-cols-5 items-center overflow-x-auto">
+					{HEADERS.map((header, index) => (
+						<h3
+							className={`mb-3 border-b border-gray-600 pb-2 text-lg font-bold ${
+								header === "Email" ? "col-span-2" : ""
+							}`}
+							key={index}
+						>
+							{header}
+						</h3>
+					))}
+				</div>
+				<p className="col-span-3 my-4 text-center">Loading...</p>
+			</>
+		);
 	}
 
 	if (users.length === 0) {
-		return <p className="col-span-3 my-4 text-center">No users found</p>;
+		return (
+			<>
+				<div className="my-4 grid grid-cols-5 items-center overflow-x-auto">
+					{HEADERS.map((header, index) => (
+						<h3
+							className={`mb-3 border-b border-gray-600 pb-2 text-lg font-bold ${
+								header === "Email" ? "col-span-2" : ""
+							}`}
+							key={index}
+						>
+							{header}
+						</h3>
+					))}
+				</div>
+				<p className="col-span-3 my-4 text-center">No Users Found.</p>
+			</>
+		);
 	}
 
 	return (
@@ -54,7 +79,7 @@ export default function UsersTable() {
 					</h3>
 				))}
 
-				{users.map((user, index) => (
+				{users.map((user) => (
 					<>
 						<p className="mb-3">{user.userName}</p>
 						<p className="col-span-2 mb-3">{user.userEmail}</p>
@@ -69,7 +94,13 @@ export default function UsersTable() {
 							>
 								Edit
 							</button>
-							<button className="btn btn-accent btn-outline m-2 ml-2" onClick={() => {}}>
+							<button
+								className="btn btn-accent btn-outline m-2 ml-2"
+								onClick={() => {
+									setSelectedUser(user);
+									(window as any).delete_user_modal.showModal();
+								}}
+							>
 								Delete
 							</button>
 						</div>
@@ -136,6 +167,7 @@ export default function UsersTable() {
 					<button>close</button>
 				</form>
 			</dialog>
+			<DeleteUserModal userToDelete={selectedUser} />
 		</>
 	);
 }

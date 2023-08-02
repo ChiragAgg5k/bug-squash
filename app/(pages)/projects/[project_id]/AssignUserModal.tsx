@@ -24,8 +24,6 @@ export default function AssignUserModal({ projectId }: { projectId: string }) {
 			}),
 		});
 
-		console.log(res);
-
 		if (res.ok) {
 			window.location.reload();
 		}
