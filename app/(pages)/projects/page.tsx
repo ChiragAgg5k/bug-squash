@@ -1,18 +1,14 @@
 "use client";
 import NavBar from "@/components/NavBar";
 import React, { useEffect, useState } from "react";
-import { PAGE_SIZE, deleteProject, fetchProjects, postProject } from ".";
+import { PAGE_SIZE, fetchProjects } from ".";
 import { Project } from "@/app/types";
 import { useSession } from "next-auth/react";
 import CreateProjectDialog, { FormValues } from "./CreateProjectDialog";
 import Link from "next/link";
+import ConfirmDeleteProject from "./ConfirmDeleteProject";
 
-function TableBody(
-	data: Project[],
-	currPageIndex: number,
-	setOpenConfirmationDialog: (open: boolean) => void,
-	setProjectToDelete: (project: Project) => void
-) {
+function TableBody(data: Project[], currPageIndex: number, setProjectToDelete: (project: Project) => void) {
 	const totalLength = data.length;
 	const rows = [];
 
@@ -38,11 +34,11 @@ function TableBody(
 						Details
 					</Link>
 					<button
+						className="btn btn-accent btn-outline m-2 ml-2"
 						onClick={() => {
 							setProjectToDelete(data[i]);
-							setOpenConfirmationDialog(true);
+							(window as any).confirm_delete_project_modal.showModal();
 						}}
-						className="btn btn-accent btn-outline"
 					>
 						Delete
 					</button>
@@ -66,65 +62,11 @@ function LoadingTable() {
 	);
 }
 
-function ConfirmationDialog({
-	open,
-	setOpenDialog,
-	projectToDelete,
-	projects,
-}: {
-	open: boolean;
-	setOpenDialog: (open: boolean) => void;
-	projectToDelete: Project | undefined;
-	projects: Project[];
-}) {
-	return (
-		<div
-			className={`fixed left-0 top-0 z-10 h-screen w-screen items-center justify-center bg-black/70 ${
-				open ? "flex" : "hidden"
-			}
-				`}
-		>
-			<div className="border-3 relative rounded border-teal-400 bg-[#D6DBDC] p-10 dark:border-teal-700 dark:bg-zinc-800">
-				<h3 className="my-3 text-center text-xl sm:text-2xl">Delete Project</h3>
-				<p className="mb-3">Are you sure you want to delete the project?</p>
-				<div className="flex items-center justify-center">
-					<button
-						className="m-3 rounded bg-red-600 px-4 py-2 font-bold text-white hover:bg-red-700"
-						onClick={() => {
-							deleteProject({
-								projectId: projectToDelete?._id!,
-							}).then((data) => {
-								if (data.acknowledged) {
-									projectToDelete = undefined;
-									projects.splice(projects.indexOf(projectToDelete!), 1);
-									setOpenDialog(false);
-								}
-							});
-						}}
-					>
-						Yes
-					</button>
-					<button
-						className="m-3 rounded bg-emerald-600 px-4 py-2 font-bold text-white hover:bg-emerald-700"
-						onClick={() => {
-							setOpenDialog(false);
-						}}
-					>
-						Cancel
-					</button>
-				</div>
-			</div>
-		</div>
-	);
-}
-
 export default function ProjectsPage() {
 	const [pagesToShow, setPagesToShow] = useState(0);
 	const [projects, setProjects] = useState<Project[] | undefined>(undefined);
-	const { data: session } = useSession();
-
 	const [projectToDelete, setProjectToDelete] = useState<Project | undefined>(undefined);
-	const [openConfirmationDialog, setOpenConfirmationDialog] = useState(false);
+	const { data: session } = useSession();
 
 	useEffect(() => {
 		if (!session?.user?.id) {
@@ -157,9 +99,7 @@ export default function ProjectsPage() {
 						<LoadingTable />
 					) : (
 						<>
-							<tbody>
-								{TableBody(projects, pagesToShow, setOpenConfirmationDialog, setProjectToDelete)}
-							</tbody>
+							<tbody>{TableBody(projects, pagesToShow, setProjectToDelete)}</tbody>
 							<tfoot>
 								<tr>
 									<td colSpan={2}>
@@ -189,12 +129,7 @@ export default function ProjectsPage() {
 					)}
 				</table>
 				<CreateProjectDialog userID={session?.user.id} />
-				<ConfirmationDialog
-					projects={projects ?? []}
-					open={openConfirmationDialog}
-					setOpenDialog={setOpenConfirmationDialog}
-					projectToDelete={projectToDelete}
-				/>
+				<ConfirmDeleteProject projectToDelete={projectToDelete} />
 			</div>
 		</div>
 	);

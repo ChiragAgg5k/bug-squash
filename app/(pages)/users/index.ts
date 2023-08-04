@@ -1,27 +1,21 @@
 export async function postUser({
-	userName,
-	userEmail,
-	userRole,
 	assigneesId,
-	assignedProjects,
+	assignedId,
+	role,
 }: {
-	userName: string;
-	userEmail: string;
-	userRole: string;
 	assigneesId: string;
-	assignedProjects: string[];
+	assignedId: string;
+	role: String;
 }) {
-	const user = await fetch("/api/users", {
+	const user = await fetch("/api/assign_user", {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
 		},
 		body: JSON.stringify({
-			userName,
-			userEmail,
-			userRole,
 			assigneesId,
-			assignedProjects,
+			assignedId,
+			role,
 		}),
 	});
 
@@ -30,7 +24,23 @@ export async function postUser({
 }
 
 export async function fetchUsers({ assigneesId }: { assigneesId: string }) {
-	const response = await fetch(`/api/users?assigneesId=${assigneesId}`);
+	if (!assigneesId || assigneesId === undefined) return;
+
+	const response = await fetch(`/api/assign_user?assigneesId=${assigneesId}`);
+	const data = await response.json();
+	return data;
+}
+
+export async function fetchUserDetails({ userID }: { userID: string }) {
+	const response = await fetch(`/api/user?userID=${userID}`);
+	const data = await response.json();
+	return data;
+}
+
+export async function deleteUser({ userId, userToDeleteId }: { userId: string; userToDeleteId: string }) {
+	const response = await fetch(`/api/assign_user?userId=${userId}&userToDeleteId=${userToDeleteId}`, {
+		method: "DELETE",
+	});
 	const data = await response.json();
 	return data;
 }

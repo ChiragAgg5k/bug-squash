@@ -1,17 +1,10 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { fetchUsers } from ".";
+import { fetchUserDetails, fetchUsers } from ".";
 import { useEffect, useState } from "react";
-import { ObjectId } from "mongodb";
-
-interface fetchedUser {
-	_id: ObjectId;
-	userName: string;
-	userEmail: string;
-	userRole: string;
-	assigneesId: string;
-}
+import { AssignedUser, fetchedUser } from "@/app/types";
+import DeleteUserModal from "./DeleteUserModal";
 
 const HEADERS = ["User", "Email", "Role", "Options"];
 
@@ -21,23 +14,70 @@ export default function UsersTable() {
 	const [selectedUser, setSelectedUser] = useState<fetchedUser | undefined>(undefined);
 
 	useEffect(() => {
-		if (!session) return;
+		async function getUsers() {
+			const userIds: AssignedUser[] = await fetchUsers({
+				assigneesId: session?.user.id,
+			});
 
-		const data = fetchUsers({
-			assigneesId: session.user.id,
-		});
+			if (userIds === undefined) return;
 
-		data.then((res) => {
-			setUsers(res);
+			const users = await Promise.all(
+				userIds.map(async (user) => {
+					const userDetail = await fetchUserDetails({
+						userID: Object.keys(user)[0],
+					});
+
+					userDetail.role = Object.values(user)[0];
+					return userDetail;
+				})
+			);
+
+			return users;
+		}
+
+		getUsers().then((users) => {
+			setUsers(users);
 		});
 	}, [session]);
 
 	if (!users) {
-		return <p className="col-span-3 my-4 text-center">Loading...</p>;
+		return (
+			<>
+				<div className="my-4 grid grid-cols-5 items-center overflow-x-auto">
+					{HEADERS.map((header, index) => (
+						<h3
+							className={`mb-3 border-b border-gray-600 pb-2 text-lg font-bold ${
+								header === "Email" ? "col-span-2" : ""
+							}`}
+							key={index}
+						>
+							{header}
+						</h3>
+					))}
+				</div>
+				<p className="col-span-3 my-4 text-center">Loading...</p>
+			</>
+		);
 	}
 
 	if (users.length === 0) {
-		return <p className="col-span-3 my-4 text-center">No users found</p>;
+		return (
+			<>
+				<div className="my-4 grid grid-cols-5 items-center overflow-x-auto">
+					{HEADERS.map((header, index) => (
+						<h3
+							className={`mb-3 border-b border-gray-600 pb-2 text-lg font-bold ${
+								header === "Email" ? "col-span-2" : ""
+							}`}
+							key={index}
+						>
+							{header}
+						</h3>
+					))}
+				</div>
+				<p className="col-span-3 my-4 text-center">No Users Found.</p>
+			</>
+		);
 	}
 
 	return (
@@ -54,11 +94,11 @@ export default function UsersTable() {
 					</h3>
 				))}
 
-				{users.map((user, index) => (
+				{users.map((user) => (
 					<>
-						<p className="mb-3">{user.userName}</p>
-						<p className="col-span-2 mb-3">{user.userEmail}</p>
-						<p className="mb-3">{user.userRole}</p>
+						<p className="mb-3">{user.name}</p>
+						<p className="col-span-2 mb-3">{user.email}</p>
+						<p className="mb-3">{user.role}</p>
 						<div className="flex items-center justify-start">
 							<button
 								className="btn btn-outline m-2"
@@ -69,7 +109,13 @@ export default function UsersTable() {
 							>
 								Edit
 							</button>
-							<button className="btn btn-accent btn-outline m-2 ml-2" onClick={() => {}}>
+							<button
+								className="btn btn-accent btn-outline m-2 ml-2"
+								onClick={() => {
+									setSelectedUser(user);
+									(window as any).delete_user_modal.showModal();
+								}}
+							>
 								Delete
 							</button>
 						</div>
@@ -92,33 +138,33 @@ export default function UsersTable() {
 							<input
 								required
 								onChange={(e) => {
-									setSelectedUser({ ...selectedUser, userName: e.target.value });
+									setSelectedUser({ ...selectedUser, name: e.target.value });
 								}}
 								type="text"
 								className="input input-bordered mb-3 w-full"
 								placeholder="Name"
-								value={selectedUser?.userName}
+								value={selectedUser?.name}
 							/>
 
 							<input
 								required
 								onChange={(e) => {
-									setSelectedUser({ ...selectedUser, userEmail: e.target.value });
+									setSelectedUser({ ...selectedUser, name: e.target.value });
 								}}
 								disabled
 								type="text"
 								className="input input-bordered mb-3 w-full"
 								placeholder="Email"
-								value={selectedUser?.userEmail}
+								value={selectedUser?.email}
 							/>
 
 							<select
 								required
 								onChange={(e) => {
-									setSelectedUser({ ...selectedUser, userRole: e.target.value });
+									setSelectedUser({ ...selectedUser, role: e.target.value });
 								}}
 								className="select select-bordered mb-4 w-1/2"
-								value={selectedUser?.userRole}
+								value={selectedUser?.role}
 							>
 								<option>Admin</option>
 								<option>Developer</option>
@@ -136,6 +182,7 @@ export default function UsersTable() {
 					<button>close</button>
 				</form>
 			</dialog>
+			<DeleteUserModal userToDelete={selectedUser} userId={session?.user.id as string} />
 		</>
 	);
 }

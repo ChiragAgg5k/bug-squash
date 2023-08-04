@@ -8,14 +8,15 @@ export interface Project {
 }
 
 export interface AssignedUser {
-	_id: ObjectId;
-	userName: string;
-	userEmail: string;
-	userRole: string;
-	assigneesId: string;
-	assignedProjects: string[];
+	[assignedId: string]: string; // assignedId: role
 }
 
-export interface AssignedUserList extends AssignedUser {
-	assigned: boolean;
+export interface fetchedUser {
+	_id: ObjectId;
+	name: string;
+	email: string;
+	image: string | null;
+	emailVerified: boolean | null;
+	assignedUsers: AssignedUser[];
+	role: string;
 }

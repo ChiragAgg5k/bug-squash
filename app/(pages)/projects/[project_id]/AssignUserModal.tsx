@@ -2,57 +2,64 @@
 
 import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
-import { AssignedUser, AssignedUserList } from "@/app/types";
-import { fetchUsers } from "../../users";
+import { AssignedUser, fetchedUser } from "@/app/types";
+import { fetchUserDetails, fetchUsers } from "../../users";
+import { assignProject } from "..";
 
 const HEADERS = ["User", "Email", "Role", "Assign"];
 
-export default function AssignUserModal({ projectId }: { projectId: string }) {
+interface fetchedUserWithAssigned extends fetchedUser {
+	assigned: boolean;
+}
+
+export default function AssignUserModal({ project }: { project: string }) {
+	const projectObj = JSON.parse(project);
 	const { data: session } = useSession();
-	const [assignedUsers, setAssignedUsers] = useState<AssignedUserList[]>([]);
+	const [assignedUsers, setAssignedUsers] = useState<fetchedUserWithAssigned[]>([]);
 
-	const handleSubmit = async (users: AssignedUserList[]) => {
-		if (users.length === 0) {
-			return;
-		}
-
-		const res = await fetch("/api/assignUsers", {
-			method: "POST",
-			body: JSON.stringify({
-				users: users,
-				projectId: projectId,
-			}),
-		});
-
-		console.log(res);
-
-		if (res.ok) {
-			window.location.reload();
+	const handleSubmit = async () => {
+		for (const user of assignedUsers) {
+			if (user.assigned) {
+				const res = await assignProject({
+					projectID: projectObj._id,
+					userID: user._id.toString(),
+				});
+				console.log(res);
+			}
 		}
 	};
 
 	useEffect(() => {
-		if (!session) return;
+		async function getUsers() {
+			const userIds: AssignedUser[] = await fetchUsers({
+				assigneesId: session?.user.id,
+			});
 
-		const data = fetchUsers({
-			assigneesId: session.user.id,
-		});
+			if (userIds === undefined) return;
 
-		data.then((res) => {
-			setAssignedUsers(
-				res.map((user: AssignedUser) => {
-					let assigned = false;
-					for (const id of user.assignedProjects) {
-						if (id === projectId) {
-							assigned = true;
-						}
+			const users = await Promise.all(
+				userIds.map(async (user) => {
+					const userDetail = await fetchUserDetails({
+						userID: Object.keys(user)[0],
+					});
+
+					userDetail.role = Object.values(user)[0];
+					if (projectObj.assignedUsers && projectObj.assignedUsers.includes(userDetail._id)) {
+						userDetail.assigned = true;
 					}
 
-					return { ...user, assigned };
+					return userDetail;
 				})
 			);
+
+			return users;
+		}
+
+		getUsers().then((users) => {
+			if (users === undefined) return;
+			setAssignedUsers(users);
 		});
-	}, [projectId, session]);
+	}, [projectObj.assignedUsers, session]);
 
 	return (
 		<>
@@ -65,10 +72,10 @@ export default function AssignUserModal({ projectId }: { projectId: string }) {
 					className="modal-box w-11/12 max-w-5xl p-8"
 					onSubmit={(e) => {
 						e.preventDefault();
-						handleSubmit(assignedUsers).then(() => (window as any).assign_user_modal.close());
+						handleSubmit();
 					}}
 				>
-					<div className="mb-3 grid grid-cols-4">
+					<div className="mb-3 grid max-h-52 grid-cols-4 overflow-auto">
 						{HEADERS.map((header, index) => (
 							<h3 className="mb-3 border-b border-gray-600 pb-2 text-lg font-bold" key={index}>
 								{header}
@@ -77,30 +84,30 @@ export default function AssignUserModal({ projectId }: { projectId: string }) {
 
 						{assignedUsers.map((user, index) => (
 							<>
-								<p className="mb-3">{user.userName}</p>
-								<p className="mb-3">{user.userEmail}</p>
-								<p className="mb-3">{user.userRole}</p>
+								<p className="mb-3" key={`name ${index}`}>
+									{user.name}
+								</p>
+								<p className="mb-3" key={`email ${index}`}>
+									{user.email}
+								</p>
+								<p className="mb-3" key={`role ${index}`}>
+									{user.role}
+								</p>
 								<input
 									type="checkbox"
 									className="checkbox"
 									checked={user.assigned}
 									onChange={(e) => {
-										setAssignedUsers(
-											assignedUsers.map((user, i) => {
-												if (i === index) {
-													return { ...user, assigned: e.target.checked };
-												} else {
-													return user;
-												}
-											})
-										);
+										const newUsers = [...assignedUsers];
+										newUsers[index].assigned = e.target.checked;
+										setAssignedUsers(newUsers);
 									}}
 								/>
 							</>
 						))}
 					</div>
 
-					<button type="submit" className="btn btn-accent w-full">
+					<button type="submit" className="mt-2wa btn btn-accent w-full">
 						Assign User
 					</button>
 				</form>
