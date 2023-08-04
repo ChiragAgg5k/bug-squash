@@ -1,6 +1,7 @@
 import NavBar from "@/components/NavBar";
 import AddUserModal from "./AddUserModal";
 import UsersTable from "./UsersTable";
+import { fetchUsers } from ".";
 
 export default async function Users() {
 	return (

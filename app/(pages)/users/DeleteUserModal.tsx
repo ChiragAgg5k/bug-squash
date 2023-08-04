@@ -1,14 +1,21 @@
 import { deleteUser } from ".";
 import { fetchedUser } from "@/app/types";
 
-export default function DeleteUserModal({ userToDelete }: { userToDelete: fetchedUser | undefined }) {
+export default function DeleteUserModal({
+	userId,
+	userToDelete,
+}: {
+	userToDelete: fetchedUser | undefined;
+	userId: string;
+}) {
 	const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
 		if (!userToDelete) return;
 
 		const res = await deleteUser({
-			userId: userToDelete._id.toString(),
+			userId: userId,
+			userToDeleteId: userToDelete._id.toString(),
 		});
 
 		if (res.acknowledged) {
@@ -29,7 +36,7 @@ export default function DeleteUserModal({ userToDelete }: { userToDelete: fetche
 				<h3 className="mb-4 text-xl font-bold">Delete User</h3>
 				<p className="mb-4 text-lg">
 					Are you sure you want to delete the user{" "}
-					<strong className="text-teal-500">{userToDelete ? userToDelete.userName : "this user"}</strong>?
+					<strong className="text-teal-500">{userToDelete ? userToDelete.name : "this user"}</strong>?
 				</p>
 				<button type="submit" className="btn btn-accent w-full">
 					Delete User

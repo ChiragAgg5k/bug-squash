@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { postProject } from ".";
 
 export interface FormValues {
 	name: string;
 	description: string;
 }
 
-export default function CreateProjectDialog({ userID }: { userID: string }) {
+export default function CreateTicketModal({ userID }: { userID: string }) {
 	const [formValues, setFormValues] = useState<FormValues>({
 		name: "",
 		description: "",
@@ -14,29 +13,17 @@ export default function CreateProjectDialog({ userID }: { userID: string }) {
 
 	const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>, formValues: FormValues) => {
 		e.preventDefault();
-
-		const { name, description } = formValues;
-
-		const res = await postProject({
-			name,
-			description,
-			userID,
-		});
-
-		if (res.acknowledged) {
-			window.location.reload();
-		}
 	};
 
 	return (
 		<>
 			<button
 				className="btn btn-accent my-10 font-bold"
-				onClick={() => (window as any).add_user_modal.showModal()}
+				onClick={() => (window as any).create_ticket_modal.showModal()}
 			>
-				Create New Project
+				Create New Ticket
 			</button>
-			<dialog id="add_user_modal" className="modal">
+			<dialog id="create_ticket_modal" className="modal">
 				<form
 					method="dialog"
 					className="modal-box w-11/12 max-w-4xl p-10"
@@ -45,7 +32,7 @@ export default function CreateProjectDialog({ userID }: { userID: string }) {
 						handleFormSubmit(e, formValues);
 					}}
 				>
-					<h3 className="mb-4 text-xl font-bold">Create New Project</h3>
+					<h3 className="mb-4 text-xl font-bold">Create New Ticket</h3>
 					<input
 						required
 						type="text"

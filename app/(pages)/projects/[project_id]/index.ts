@@ -1,7 +1,7 @@
 import clientPromise from "@/mongodb/config";
 import { ObjectId } from "mongodb";
 
-export async function fetchProject({ projectId }: { projectId: string }) {
+export default async function fetchProject({ projectId }: { projectId: string }) {
 	const client = await clientPromise;
 	const db = client.db();
 

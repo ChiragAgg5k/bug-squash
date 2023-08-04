@@ -1,8 +1,8 @@
 import NavBar from "@/components/NavBar";
-import { fetchProject } from ".";
 import Link from "next/link";
 import AssignUserModal from "./AssignUserModal";
 import AssignedUsers from "./AssignedUsers";
+import fetchProject from ".";
 
 export default async function ProjectPage({
 	params,
@@ -47,8 +47,8 @@ export default async function ProjectPage({
 				<div className="flex">
 					<div className="w-full">
 						<h2 className="mb-4 text-lg">Assigned Users:</h2>
-						<AssignedUsers projectId={params.project_id} />
-						<AssignUserModal projectId={params.project_id} />
+						<AssignedUsers projectAssignedUsers={project.userIDs} />
+						<AssignUserModal project={JSON.stringify(project)} />
 					</div>
 
 					<div className="w-full">

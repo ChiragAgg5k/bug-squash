@@ -1,42 +1,59 @@
 "use client";
 
-import { useState } from "react";
-import { postUser } from ".";
+import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { Session } from "next-auth";
-import { useRouter } from "next/navigation";
+import { postUser } from ".";
+import { AssignedUser } from "@/app/types";
 
 interface UserDetails {
-	name: string;
 	email: string;
 	role: string;
 }
 
 export default function AddUserModal() {
 	const [user, setUser] = useState<UserDetails>({
-		name: "",
 		email: "",
 		role: "",
 	});
 
+	const [allUsers, setAllUsers] = useState<AssignedUser[]>([]);
+	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const { data: session } = useSession();
-	const router = useRouter();
+
+	useEffect(() => {
+		fetch("/api/all_users")
+			.then((res) => res.json())
+			.then((data) => {
+				setAllUsers(data);
+			});
+	}, []);
 
 	const handleSubmit = async (user: UserDetails, session: Session | null) => {
-		if (user.name === "" || user.email === "" || user.role === "" || session === null) {
+		if (user.role === "") {
+			setErrorMessage("Please select a role");
 			return;
 		}
 
-		const res = await postUser({
-			userName: user.name,
-			userEmail: user.email,
-			userRole: user.role,
-			assigneesId: session.user.id,
-			assignedProjects: [],
+		let userExists = false;
+		allUsers.map(async (u) => {
+			if (u.email === user.email) {
+				userExists = true;
+				const res = await postUser({
+					assignedId: u._id.toString(),
+					assigneesId: session?.user.id,
+					role: user.role,
+				});
+
+				if (res.acknowledged) {
+					window.location.reload();
+				}
+			}
 		});
 
-		if (res.acknowledged) {
-			window.location.reload();
+		if (!userExists) {
+			setErrorMessage("User does not exist");
+			return;
 		}
 	};
 
@@ -54,19 +71,10 @@ export default function AddUserModal() {
 					className="modal-box p-10"
 					onSubmit={(e) => {
 						e.preventDefault();
-						handleSubmit(user, session).then(() => (window as any).add_user_modal.close());
+						handleSubmit(user, session);
 					}}
 				>
 					<h3 className="mb-4 text-xl font-bold">Add New User</h3>
-					<input
-						required
-						onChange={(e) => {
-							setUser({ ...user, name: e.target.value });
-						}}
-						type="text"
-						className="input input-bordered mb-3 w-full"
-						placeholder="Name"
-					/>
 					<input
 						required
 						onChange={(e) => {
@@ -81,6 +89,7 @@ export default function AddUserModal() {
 						onChange={(e) => {
 							setUser({ ...user, role: e.target.value });
 						}}
+						defaultValue={"Select Role"}
 						className="select select-bordered mb-4 block w-full max-w-xs"
 					>
 						<option selected disabled>
@@ -94,6 +103,7 @@ export default function AddUserModal() {
 					<button type="submit" className="btn btn-accent w-full">
 						Add User
 					</button>
+					<p className="mt-2">{errorMessage}</p>
 				</form>
 				<form method="dialog" className="modal-backdrop bg-transparent">
 					<button>close</button>
