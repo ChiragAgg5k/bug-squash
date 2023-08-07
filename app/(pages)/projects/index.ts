@@ -47,6 +47,17 @@ export async function assignProject({ projectID, userID }: { projectID: string; 
 	return data;
 }
 
+export async function removeProject({ projectID, userID }: { projectID: string; userID: string }) {
+	const response = await fetch(`/api/project_assignment?projectID=${projectID}&userID=${userID}`, {
+		method: "DELETE",
+		headers: {
+			"Content-Type": "application/json",
+		},
+	});
+	const data = await response.json();
+	return data;
+}
+
 export async function fetchRole({ userID, assignedID }: { userID: string; assignedID: string }) {
 	const response = await fetch(`/api/user_role?userID=${userID}&assignedID=${assignedID}`);
 	const data = await response.json();

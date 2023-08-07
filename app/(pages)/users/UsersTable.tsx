@@ -36,6 +36,10 @@ export default function UsersTable() {
 		}
 
 		getUsers().then((users) => {
+			if (users === undefined) {
+				setUsers([]);
+				return;
+			}
 			setUsers(users);
 		});
 	}, [session]);
