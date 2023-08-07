@@ -48,7 +48,7 @@ export default async function ProjectPage({
 					<div className="w-full">
 						<h2 className="mb-4 text-lg">Assigned Users:</h2>
 						<AssignedUsers projectAssignedUsers={project.userIDs} />
-						<AssignUserModal projectId={project._id.toString()} userIDs={project.userIDs} />
+						<AssignUserModal projectId={project._id.toString()} projectUserIDs={project.userIDs} />
 					</div>
 
 					<div className="w-full">
