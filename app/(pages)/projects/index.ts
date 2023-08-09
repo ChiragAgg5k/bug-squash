@@ -10,17 +10,19 @@ export async function postProject({
 	userID,
 	name,
 	description,
+	link,
 }: {
 	userID: string;
 	name: string;
 	description: string;
+	link: string;
 }) {
 	const response = await fetch("/api/projects", {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
 		},
-		body: JSON.stringify({ userID, name, description }),
+		body: JSON.stringify({ userID, name, description, link }),
 	});
 	const data = await response.json();
 	return data;

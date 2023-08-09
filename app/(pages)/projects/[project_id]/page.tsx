@@ -36,6 +36,20 @@ export default async function ProjectPage({
 						<p className="mb-4">
 							<strong className="mr-2">Description:</strong> {project.description}
 						</p>
+						{project.link && (
+							<p className="mb-4">
+								<strong className="mr-2">Link: </strong>
+								<Link
+									target="_blank"
+									href={project.link}
+									className="
+								text-teal-500 hover:underline
+								"
+								>
+									{project.link}
+								</Link>
+							</p>
+						)}
 					</div>
 					<div>
 						<button className="btn btn-outline my-4 ml-4">Edit</button>

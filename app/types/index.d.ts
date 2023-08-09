@@ -20,3 +20,21 @@ export interface fetchedUser {
 	assignedUsers: AssignedUser[];
 	role: string;
 }
+
+export interface Ticket {
+	userID: string;
+	heading: string;
+	description: string;
+	projectID: string;
+	type: "bug" | "feature" | "improvement" | "documentation";
+	priority: "low" | "medium" | "high" | "urgent";
+	status: "open" | "in-progress" | "closed";
+	assignedUsers: AssignedUser[];
+	comments: Comment[];
+}
+
+export interface Comment {
+	_id: string;
+	userID: string;
+	text: string;
+}
