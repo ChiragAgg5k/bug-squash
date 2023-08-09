@@ -4,23 +4,26 @@ import { postProject } from ".";
 export interface FormValues {
 	name: string;
 	description: string;
+	link: string;
 }
 
 export default function CreateProjectDialog({ userID }: { userID: string }) {
 	const [formValues, setFormValues] = useState<FormValues>({
 		name: "",
 		description: "",
+		link: "",
 	});
 
 	const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>, formValues: FormValues) => {
 		e.preventDefault();
 
-		const { name, description } = formValues;
+		const { name, description, link } = formValues;
 
 		const res = await postProject({
 			name,
 			description,
 			userID,
+			link,
 		});
 
 		if (res.acknowledged) {
@@ -63,8 +66,22 @@ export default function CreateProjectDialog({ userID }: { userID: string }) {
 							setFormValues({ ...formValues, description: e.target.value });
 						}}
 						className="textarea textarea-bordered mb-3 w-full"
-						placeholder="Project Description"
+						placeholder="Project Description (min. 20 characters)"
 					/>
+
+					<input
+						required
+						className="input input-bordered mb-3 w-full"
+						placeholder="Project Link (Github, etc.)"
+						type="url"
+						onChange={(e) => {
+							if (!e.target.value.startsWith("https://")) {
+								e.target.value = "https://" + e.target.value;
+							}
+							setFormValues({ ...formValues, link: e.target.value });
+						}}
+					/>
+
 					<button type="submit" className="btn btn-accent w-full">
 						Create Project
 					</button>

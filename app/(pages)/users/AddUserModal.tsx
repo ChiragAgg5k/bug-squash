@@ -89,7 +89,6 @@ export default function AddUserModal() {
 						onChange={(e) => {
 							setUser({ ...user, role: e.target.value });
 						}}
-						defaultValue={"Select Role"}
 						className="select select-bordered mb-4 block w-full max-w-xs"
 					>
 						<option selected disabled>

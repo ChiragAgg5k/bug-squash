@@ -33,13 +33,13 @@ export default function DeleteUserModal({
 					handleSubmit(e);
 				}}
 			>
-				<h3 className="mb-4 text-xl font-bold">Delete User</h3>
+				<h3 className="mb-4 text-xl font-bold">Remove User</h3>
 				<p className="mb-4 text-lg">
-					Are you sure you want to delete the user{" "}
+					Are you sure you want to remove the user{" "}
 					<strong className="text-teal-500">{userToDelete ? userToDelete.name : "this user"}</strong>?
 				</p>
 				<button type="submit" className="btn btn-accent w-full">
-					Delete User
+					Remove User
 				</button>
 			</form>
 			<form method="dialog" className="modal-backdrop bg-transparent">

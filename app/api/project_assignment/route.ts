@@ -34,7 +34,33 @@ export async function POST(request: Request) {
 		.updateOne(
 			{ _id: new ObjectId(projectId) },
 			{
-				$push: {
+				$addToSet: {
+					userIDs: userID,
+				},
+			}
+		)
+		.catch((err) => {
+			return NextResponse.error();
+		});
+
+	return NextResponse.json(project);
+}
+
+export async function DELETE(request: NextRequest) {
+	const projectID = request.nextUrl.searchParams.get("projectID");
+	const userID = request.nextUrl.searchParams.get("userID");
+
+	if (!projectID || !userID) return NextResponse.error();
+
+	const client = await clientPromise;
+	const db = client.db();
+
+	const project = await db
+		.collection("projects")
+		.updateOne(
+			{ _id: new ObjectId(projectID) },
+			{
+				$pull: {
 					userIDs: userID,
 				},
 			}

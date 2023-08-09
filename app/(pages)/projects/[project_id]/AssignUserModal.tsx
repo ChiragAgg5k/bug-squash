@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { AssignedUser, fetchedUser } from "@/app/types";
 import { fetchUserDetails, fetchUsers } from "../../users";
-import { assignProject } from "..";
+import { assignProject, removeProject } from "..";
 
 const HEADERS = ["User", "Email", "Role", "Assign"];
 
@@ -12,24 +12,50 @@ interface fetchedUserWithAssigned extends fetchedUser {
 	assigned: boolean;
 }
 
-export default function AssignUserModal({ project }: { project: string }) {
-	const projectObj = JSON.parse(project);
+export default function AssignUserModal({
+	projectUserIDs,
+	projectId,
+}: {
+	projectUserIDs: string[];
+	projectId: string;
+}) {
 	const { data: session } = useSession();
 	const [assignedUsers, setAssignedUsers] = useState<fetchedUserWithAssigned[]>([]);
 
 	const handleSubmit = async () => {
-		for (const user of assignedUsers) {
-			if (user.assigned) {
-				const res = await assignProject({
-					projectID: projectObj._id,
-					userID: user._id.toString(),
-				});
-				console.log(res);
+		const res = await Promise.all(
+			assignedUsers.map(async (user) => {
+				if (user.assigned) {
+					const res = await assignProject({
+						projectID: projectId,
+						userID: user._id.toString(),
+					});
+
+					return res;
+				} else {
+					const res = await removeProject({
+						projectID: projectId,
+						userID: user._id.toString(),
+					});
+
+					return res;
+				}
+			})
+		);
+
+		for (const r of res) {
+			if (!r.acknowledged) {
+				alert("Something went wrong");
+				return;
 			}
 		}
+
+		window.location.reload();
 	};
 
 	useEffect(() => {
+		if (!session) return;
+
 		async function getUsers() {
 			const userIds: AssignedUser[] = await fetchUsers({
 				assigneesId: session?.user.id,
@@ -44,8 +70,10 @@ export default function AssignUserModal({ project }: { project: string }) {
 					});
 
 					userDetail.role = Object.values(user)[0];
-					if (projectObj.assignedUsers && projectObj.assignedUsers.includes(userDetail._id)) {
+					if (projectUserIDs !== undefined && projectUserIDs.includes(userDetail._id.toString())) {
 						userDetail.assigned = true;
+					} else {
+						userDetail.assigned = false;
 					}
 
 					return userDetail;
@@ -59,7 +87,7 @@ export default function AssignUserModal({ project }: { project: string }) {
 			if (users === undefined) return;
 			setAssignedUsers(users);
 		});
-	}, [projectObj.assignedUsers, session]);
+	}, [projectUserIDs, session]);
 
 	return (
 		<>
@@ -94,13 +122,14 @@ export default function AssignUserModal({ project }: { project: string }) {
 									{user.role}
 								</p>
 								<input
+									key={`input ${index}`}
 									type="checkbox"
 									className="checkbox"
-									checked={user.assigned}
+									defaultChecked={user.assigned}
 									onChange={(e) => {
-										const newUsers = [...assignedUsers];
-										newUsers[index].assigned = e.target.checked;
-										setAssignedUsers(newUsers);
+										const newAssignedUsers = [...assignedUsers];
+										newAssignedUsers[index].assigned = e.target.checked;
+										setAssignedUsers(newAssignedUsers);
 									}}
 								/>
 							</>

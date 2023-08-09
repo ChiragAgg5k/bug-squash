@@ -10,17 +10,19 @@ export async function postProject({
 	userID,
 	name,
 	description,
+	link,
 }: {
 	userID: string;
 	name: string;
 	description: string;
+	link: string;
 }) {
 	const response = await fetch("/api/projects", {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
 		},
-		body: JSON.stringify({ userID, name, description }),
+		body: JSON.stringify({ userID, name, description, link }),
 	});
 	const data = await response.json();
 	return data;
@@ -42,6 +44,17 @@ export async function assignProject({ projectID, userID }: { projectID: string; 
 			"Content-Type": "application/json",
 		},
 		body: JSON.stringify({ projectID, userID }),
+	});
+	const data = await response.json();
+	return data;
+}
+
+export async function removeProject({ projectID, userID }: { projectID: string; userID: string }) {
+	const response = await fetch(`/api/project_assignment?projectID=${projectID}&userID=${userID}`, {
+		method: "DELETE",
+		headers: {
+			"Content-Type": "application/json",
+		},
 	});
 	const data = await response.json();
 	return data;

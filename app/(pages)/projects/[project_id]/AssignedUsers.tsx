@@ -53,7 +53,7 @@ export default function AssignedUsers({ projectAssignedUsers }: { projectAssigne
 	return (
 		<div className="mb-4">
 			{assignedUsers.map((user, index) => (
-				<p key={index}>
+				<p key={index} className="py-2">
 					{index + 1}. - {user.name} - {user.email} - {user.role}
 				</p>
 			))}

@@ -1,19 +1,49 @@
-import React, { useState } from "react";
+"use client";
+import { useSession } from "next-auth/react";
+import React, { useEffect, useState } from "react";
+import { fetchProjects } from "../projects";
+import { Project, Ticket } from "@/app/types";
+import { postTicket } from ".";
+import { set } from "zod";
 
-export interface FormValues {
-	name: string;
-	description: string;
-}
-
-export default function CreateTicketModal({ userID }: { userID: string }) {
-	const [formValues, setFormValues] = useState<FormValues>({
-		name: "",
+export default function CreateTicketModal() {
+	const [ticket, setTicket] = useState<Ticket>({
+		userID: "",
+		heading: "",
 		description: "",
+		projectID: "",
+		type: "bug",
+		priority: "low",
+		status: "open",
+		assignedUsers: [],
+		comments: [],
 	});
 
-	const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>, formValues: FormValues) => {
+	const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>, ticket: Ticket) => {
 		e.preventDefault();
+		const res = await postTicket(ticket);
+
+		if (res.acknowledged) {
+			window.location.reload();
+		}
 	};
+
+	const { data: session } = useSession();
+	const [projects, setProjects] = useState<Project[] | undefined>(undefined);
+
+	useEffect(() => {
+		if (!session?.user?.id) {
+			return;
+		}
+
+		setTicket((t) => ({ ...t, userID: session?.user?.id }));
+
+		fetchProjects({
+			userID: session?.user?.id,
+		}).then((data) => {
+			setProjects(data);
+		});
+	}, [session?.user?.id]);
 
 	return (
 		<>
@@ -29,7 +59,7 @@ export default function CreateTicketModal({ userID }: { userID: string }) {
 					className="modal-box w-11/12 max-w-4xl p-10"
 					onSubmit={(e) => {
 						e.preventDefault();
-						handleFormSubmit(e, formValues);
+						handleFormSubmit(e, ticket);
 					}}
 				>
 					<h3 className="mb-4 text-xl font-bold">Create New Ticket</h3>
@@ -37,23 +67,79 @@ export default function CreateTicketModal({ userID }: { userID: string }) {
 						required
 						type="text"
 						onChange={(e) => {
-							setFormValues({ ...formValues, name: e.target.value });
+							setTicket({ ...ticket, heading: e.target.value });
 						}}
 						className="input input-bordered mb-3 w-full"
-						placeholder="Project Name"
+						placeholder="Ticket Heading"
 					/>
 					<textarea
 						required
-						rows={4}
+						rows={3}
 						minLength={20}
 						onChange={(e) => {
-							setFormValues({ ...formValues, description: e.target.value });
+							setTicket({ ...ticket, description: e.target.value });
 						}}
 						className="textarea textarea-bordered mb-3 w-full"
-						placeholder="Project Description"
+						placeholder="Ticket Description (min. 20 characters)"
 					/>
+
+					<select
+						className="select select-bordered mb-4 mr-4 block w-full max-w-md"
+						onChange={(e) => {
+							if (e.target.selectedIndex === 0) return;
+							if (!projects) return;
+
+							// @ts-ignore
+							setTicket({
+								...ticket,
+								projectID: projects[e.target.selectedIndex - 1]._id,
+							});
+						}}
+					>
+						<option selected disabled>
+							Select Project
+						</option>
+						{projects?.map((project) => (
+							<option key={project._id} data-id={project._id}>
+								{project.name}
+							</option>
+						))}
+					</select>
+
+					<select
+						className="select select-bordered mb-4 mr-4 inline"
+						onChange={(e) => {
+							// @ts-ignore
+							setTicket({ ...ticket, type: e.target.value.toLowerCase() });
+						}}
+					>
+						<option selected disabled>
+							Ticket Type
+						</option>
+						<option>Bug</option>
+						<option>Feature</option>
+						<option>Improvement</option>
+						<option> Documentation</option>
+					</select>
+
+					<select
+						className="select select-bordered mb-4 inline"
+						onChange={(e) => {
+							// @ts-ignore
+							setTicket({ ...ticket, priority: e.target.value.toLowerCase() });
+						}}
+					>
+						<option selected disabled>
+							Ticket Priority
+						</option>
+						<option>Low</option>
+						<option>Medium</option>
+						<option>High</option>
+						<option>Urgent</option>
+					</select>
+
 					<button type="submit" className="btn btn-accent w-full">
-						Create Project
+						Create Ticket
 					</button>
 				</form>
 				<form method="dialog" className="modal-backdrop bg-transparent">
