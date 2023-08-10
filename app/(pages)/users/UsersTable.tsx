@@ -144,6 +144,7 @@ export default function UsersTable() {
 								onChange={(e) => {
 									setSelectedUser({ ...selectedUser, name: e.target.value });
 								}}
+								disabled
 								type="text"
 								className="input input-bordered mb-3 w-full"
 								placeholder="Name"

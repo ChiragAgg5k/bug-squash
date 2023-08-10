@@ -60,7 +60,7 @@ export default function AddUserModal() {
 	return (
 		<>
 			<button
-				className="btn btn-accent ml-8 font-bold"
+				className="btn btn-accent max-w-xs font-bold"
 				onClick={() => (window as any).add_user_modal.showModal()}
 			>
 				Add User
@@ -90,10 +90,9 @@ export default function AddUserModal() {
 							setUser({ ...user, role: e.target.value });
 						}}
 						className="select select-bordered mb-4 block w-full max-w-xs"
+						defaultValue={"Select Role"}
 					>
-						<option selected disabled>
-							Select Role
-						</option>
+						<option disabled>Select Role</option>
 						<option>Admin</option>
 						<option>Developer</option>
 						<option>Tester</option>

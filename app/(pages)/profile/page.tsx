@@ -1,4 +1,3 @@
-import NavBar from "@/components/NavBar";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
@@ -14,25 +13,22 @@ export default async function ProfilePage() {
 	}
 
 	return (
-		<>
-			<NavBar />
-			<div className="flex h-screen flex-col items-center justify-center sm:flex-row">
-				<div className="flex items-center justify-center">
-					<Image
-						src={user.image ?? "/logo.png"}
-						alt="Profile Picture"
-						width={110}
-						height={110}
-						className="mr-8 rounded-full"
-					/>
-					<div>
-						<h1 className="text-xl">{user.name}</h1>
-						<p className="text-lg">{user.email}</p>
-					</div>
+		<div className="flex flex-grow flex-col items-center justify-center sm:flex-row">
+			<div className="flex items-center justify-center">
+				<Image
+					src={user.image ?? "/logo.png"}
+					alt="Profile Picture"
+					width={110}
+					height={110}
+					className="mr-8 rounded-full"
+				/>
+				<div>
+					<h1 className="text-xl">{user.name}</h1>
+					<p className="text-lg">{user.email}</p>
 				</div>
-
-				<SignoutButton />
 			</div>
-		</>
+
+			<SignoutButton />
+		</div>
 	);
 }

@@ -6,11 +6,13 @@ import { fetchSingleProject, getTickets } from ".";
 import { Project } from "@playwright/test";
 import { useSession } from "next-auth/react";
 import CreateTicketModal from "./CreateTicketModal";
+import { useRouter } from "next/navigation";
 
 export default function TicketsTable() {
 	const [tickets, setTickets] = useState<Ticket[] | undefined>(undefined);
 	const [projects, setProjects] = useState<Project[] | undefined>(undefined);
 	const { data: session } = useSession();
+	const router = useRouter();
 
 	useEffect(() => {
 		getTickets({
@@ -94,7 +96,14 @@ export default function TicketsTable() {
 											<td className="px-4 py-4 text-green-500">{ticket.priority}</td>
 										)}
 										<td className="px-4 py-4">
-											<button className="btn btn-outline">Details</button>
+											<button
+												className="btn btn-outline"
+												onClick={() => {
+													router.push(`/tickets/${ticket._id}`);
+												}}
+											>
+												Details
+											</button>
 											<button className="btn btn-accent btn-outline">Close</button>
 										</td>
 									</tr>

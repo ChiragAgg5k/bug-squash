@@ -22,6 +22,7 @@ export interface fetchedUser {
 }
 
 export interface Ticket {
+	_id: string;
 	userID: string;
 	heading: string;
 	description: string;
@@ -32,6 +33,8 @@ export interface Ticket {
 	assignedUsers: AssignedUser[];
 	comments: Comment[];
 }
+
+interface TicketWithoutID extends Omit<Ticket, "_id"> {}
 
 export interface Comment {
 	_id: string;
