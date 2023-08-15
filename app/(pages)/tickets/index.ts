@@ -1,6 +1,6 @@
-import { Ticket } from "@/app/types";
+import { TicketWithoutID } from "@/app/types";
 
-export async function postTicket(ticket: Ticket) {
+export async function postTicket(ticket: TicketWithoutID) {
 	const response = await fetch("/api/ticket", {
 		method: "POST",
 		headers: {

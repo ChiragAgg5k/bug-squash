@@ -34,7 +34,7 @@ export default function CreateProjectDialog({ userID }: { userID: string }) {
 	return (
 		<>
 			<button
-				className="btn btn-accent my-10 font-bold"
+				className="btn btn-accent my-10 max-w-xs font-bold"
 				onClick={() => (window as any).add_user_modal.showModal()}
 			>
 				Create New Project

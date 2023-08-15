@@ -2,12 +2,12 @@
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { fetchProjects } from "../projects";
-import { Project, Ticket } from "@/app/types";
+import { Project, Ticket, TicketWithoutID } from "@/app/types";
 import { postTicket } from ".";
 import { set } from "zod";
 
 export default function CreateTicketModal() {
-	const [ticket, setTicket] = useState<Ticket>({
+	const [ticket, setTicket] = useState<TicketWithoutID>({
 		userID: "",
 		heading: "",
 		description: "",
@@ -19,7 +19,7 @@ export default function CreateTicketModal() {
 		comments: [],
 	});
 
-	const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>, ticket: Ticket) => {
+	const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>, ticket: TicketWithoutID) => {
 		e.preventDefault();
 		const res = await postTicket(ticket);
 
@@ -95,10 +95,9 @@ export default function CreateTicketModal() {
 								projectID: projects[e.target.selectedIndex - 1]._id,
 							});
 						}}
+						defaultValue={"Select Project"}
 					>
-						<option selected disabled>
-							Select Project
-						</option>
+						<option disabled>Select Project</option>
 						{projects?.map((project) => (
 							<option key={project._id} data-id={project._id}>
 								{project.name}
@@ -112,10 +111,9 @@ export default function CreateTicketModal() {
 							// @ts-ignore
 							setTicket({ ...ticket, type: e.target.value.toLowerCase() });
 						}}
+						defaultValue={"Ticket Type"}
 					>
-						<option selected disabled>
-							Ticket Type
-						</option>
+						<option disabled>Ticket Type</option>
 						<option>Bug</option>
 						<option>Feature</option>
 						<option>Improvement</option>
@@ -128,10 +126,9 @@ export default function CreateTicketModal() {
 							// @ts-ignore
 							setTicket({ ...ticket, priority: e.target.value.toLowerCase() });
 						}}
+						defaultValue={"Ticket Priority"}
 					>
-						<option selected disabled>
-							Ticket Priority
-						</option>
+						<option disabled>Ticket Priority</option>
 						<option>Low</option>
 						<option>Medium</option>
 						<option>High</option>

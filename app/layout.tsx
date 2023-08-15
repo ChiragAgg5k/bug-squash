@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { Ubuntu } from "next/font/google";
 import "bootstrap/dist/css/bootstrap.css";
 import NextTopLoader from "nextjs-toploader";
+import NavBar from "@/components/NavBar";
 
 const ubuntu = Ubuntu({
 	weight: "400",
@@ -18,7 +19,7 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
 	return (
-		<html lang="en">
+		<html lang="en" suppressHydrationWarning={true}>
 			<NextAuthProvider>
 				<head>
 					<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -28,7 +29,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				</head>
 				<body suppressHydrationWarning={true} className={ubuntu.className}>
 					<NextTopLoader showSpinner={false} color="#0f766e" />
-					{children}
+					<NavBar />
+					<main className="mx-8 flex min-h-screen flex-col pt-28">{children}</main>
 				</body>
 			</NextAuthProvider>
 		</html>
