@@ -1,0 +1,15 @@
+{
+	"depcheck": {
+		"ignoreMatches": [
+			"sharp",
+			"tailwindcss",
+			"saslprep",
+			"react-icons",
+			"prettier-plugin-tailwindcss",
+			"postcss",
+			"autoprefixer",
+			"@types/node",
+			"@types/react-dom"
+		]
+	}
+}
