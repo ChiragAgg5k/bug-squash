@@ -1,7 +1,7 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { fetchUserDetails, fetchUsers } from ".";
+import { fetchUserDetails, fetchUsers, modifyUser } from ".";
 import { useEffect, useState } from "react";
 import { AssignedUser, fetchedUser } from "@/app/types";
 import DeleteUserModal from "./DeleteUserModal";
@@ -12,6 +12,20 @@ export default function UsersTable() {
 	const { data: session } = useSession();
 	const [users, setUsers] = useState<fetchedUser[] | undefined>(undefined);
 	const [selectedUser, setSelectedUser] = useState<fetchedUser | undefined>(undefined);
+
+	const handleMoifyUser = async () => {
+		if (selectedUser === undefined) return;
+
+		const response = await modifyUser({
+			userId: session?.user.id as string,
+			assignedUserId: selectedUser._id.toString(),
+			roleToModify: selectedUser.role,
+		});
+
+		if (response.acknowledged) {
+			window.location.reload();
+		}
+	}
 
 	useEffect(() => {
 		async function getUsers() {
@@ -134,6 +148,7 @@ export default function UsersTable() {
 					className="modal-box p-8"
 					onSubmit={(e) => {
 						e.preventDefault();
+						handleMoifyUser();
 					}}
 				>
 					<h3 className="mb-4 text-xl font-bold">Edit User</h3>
