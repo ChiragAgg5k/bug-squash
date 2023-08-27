@@ -44,3 +44,28 @@ export async function deleteUser({ userId, userToDeleteId }: { userId: string; u
 	const data = await response.json();
 	return data;
 }
+
+export async function modifyUser({
+	userId,
+	assignedUserId,
+	roleToModify,
+}: {
+	userId: string;
+	assignedUserId: string;
+	roleToModify: string;
+}) {
+	const response = await fetch(`/api/user`, {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify({
+			userId,
+			assignedUserId,
+			roleToModify,
+		}),
+	});
+
+	const data = await response.json();
+	return data;
+}

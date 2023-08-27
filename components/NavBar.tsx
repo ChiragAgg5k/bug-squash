@@ -15,9 +15,6 @@ export default function NavBar() {
 				<Navbar.Toggle aria-controls="basic-navbar-nav" />
 				<Navbar.Collapse id="basic-navbar-nav">
 					<Nav className="ml-auto text-center text-zinc-400 ">
-						<Link href="/dashboard" className="mx-3 my-2 transition-all ease-in-out hover:text-zinc-200">
-							Dashboard
-						</Link>
 						<Link className="mx-3 my-2 transition-all ease-in-out hover:text-zinc-200" href="/users">
 							Users
 						</Link>
