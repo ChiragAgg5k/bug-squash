@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:wght@300;400;500;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -15,6 +16,7 @@
 }
 
 body {
+	font-family: "Ubuntu", sans-serif;
 	color: rgb(var(--foreground-rgb));
 	background: rgb(var(--background-rgb));
 	border-color: rgb(var(--foreground-rgb));

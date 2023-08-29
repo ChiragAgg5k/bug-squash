@@ -1,16 +1,8 @@
 import { NextAuthProvider } from "@/app/providers/provider";
 import "./globals.css";
 import type { Metadata } from "next";
-import { Ubuntu } from "next/font/google";
-import "bootstrap/dist/css/bootstrap.css";
 import NextTopLoader from "nextjs-toploader";
 import NavBar from "@/components/NavBar";
-
-const ubuntu = Ubuntu({
-	weight: "400",
-	style: "normal",
-	subsets: ["latin"],
-});
 
 export const metadata: Metadata = {
 	title: "Bug Squash",
@@ -27,7 +19,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 					<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
 					<link rel="manifest" href="/site.webmanifest" />
 				</head>
-				<body suppressHydrationWarning={true} className={ubuntu.className}>
+				<body suppressHydrationWarning={true}>
 					<NextTopLoader showSpinner={false} color="#0f766e" />
 					<NavBar />
 					<main className="mx-8 flex min-h-screen flex-col pt-28">{children}</main>

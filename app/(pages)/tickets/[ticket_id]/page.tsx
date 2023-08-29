@@ -22,6 +22,9 @@ export default function Page({
 			.then((res) => res.json())
 			.then((data) => {
 				setTicket(data);
+			})
+			.catch((err) => {
+				console.error(err);
 			});
 	}, [params.ticket_id]);
 
