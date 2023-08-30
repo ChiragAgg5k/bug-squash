@@ -46,9 +46,9 @@ export default function TicketsTable() {
 		<>
 			<p>Here are all of the tickets currently open or in progress in the system:</p>
 			<div className="overflow-x-auto">
-				<table className="mt-6 w-full border-b-2 border-gray-500">
+				<table className="mt-6 w-full border-b">
 					<thead>
-						<tr className="border-b">
+						<tr className="border-b border-gray-700 dark:border-gray-300">
 							<th className="px-4 py-4">Heading</th>
 							<th className="px-4 py-4">Description</th>
 							<th className="px-4 py-4">Project</th>
@@ -78,7 +78,7 @@ export default function TicketsTable() {
 							(ticket, index) =>
 								(ticket.status === "open" || ticket.status === "in-progress") && (
 									// @ts-ignore
-									<tr key={ticket._id} className="border-b">
+									<tr key={ticket._id} className="border-b border-gray-700 dark:border-gray-300">
 										<td className="px-4 py-4">{ticket.heading}</td>
 										<td className="line-clamp-3 px-4 py-4">{ticket.description}</td>
 										<td className="px-4 py-4">
@@ -97,14 +97,14 @@ export default function TicketsTable() {
 										)}
 										<td className="px-4 py-4">
 											<button
-												className="btn btn-outline"
+												className="btn btn-outline mb-2"
 												onClick={() => {
 													router.push(`/tickets/${ticket._id}`);
 												}}
 											>
 												Details
 											</button>
-											<button className="btn btn-accent btn-outline">Close</button>
+											<button className="btn btn-accent dark:btn-outline">Close</button>
 										</td>
 									</tr>
 								)

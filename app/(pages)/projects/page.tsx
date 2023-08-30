@@ -13,7 +13,7 @@ function TableBody(data: Project[], currPageIndex: number, setProjectToDelete: (
 
 	if (totalLength === 0) {
 		return (
-			<tr className="border-b">
+			<tr className="border-b border-gray-700 dark:border-gray-300">
 				<td colSpan={3} className="text-center">
 					<p className="my-4">No Projects Found</p>
 				</td>
@@ -23,7 +23,7 @@ function TableBody(data: Project[], currPageIndex: number, setProjectToDelete: (
 
 	for (let i = currPageIndex; i < currPageIndex + PAGE_SIZE && i < totalLength; i++) {
 		rows.push(
-			<tr key={i} className="border-b">
+			<tr key={i} className="border-b border-gray-700 dark:border-gray-500">
 				<td className="px-4 py-2">{data[i].name}</td>
 				<td className="px-4 py-4">
 					<p className="line-clamp-4">{data[i].description}</p>
@@ -33,7 +33,7 @@ function TableBody(data: Project[], currPageIndex: number, setProjectToDelete: (
 						Details
 					</Link>
 					<button
-						className="btn btn-accent btn-outline m-2 ml-2"
+						className="btn btn-accent m-2 ml-2 dark:btn-outline"
 						onClick={() => {
 							setProjectToDelete(data[i]);
 							(window as any).confirm_delete_project_modal.showModal();
@@ -52,7 +52,7 @@ function TableBody(data: Project[], currPageIndex: number, setProjectToDelete: (
 function LoadingTable() {
 	return (
 		<tbody>
-			<tr className="border-b">
+			<tr className="border-b border-gray-700 dark:border-gray-300">
 				<td colSpan={3} className="text-center">
 					<p className="my-4">Loading...</p>
 				</td>
@@ -84,9 +84,9 @@ export default function ProjectsPage() {
 			<h1 className="mb-4 text-2xl">Your Projects</h1>
 			<p>All of your projects are listed here:</p>
 			<div className="overflow-x-auto">
-				<table className="mt-6 w-full border-b-2 border-gray-500">
+				<table className="mt-6 w-full border-b border-gray-700 dark:border-gray-300">
 					<thead>
-						<tr className="border-b">
+						<tr className="border-b border-gray-700 dark:border-gray-300">
 							<th className="px-4 py-4">Name</th>
 							<th className="px-4 py-4">Description</th>
 							<th className="px-4 py-4">Operations</th>

@@ -25,7 +25,7 @@ export default function UsersTable() {
 		if (response.acknowledged) {
 			window.location.reload();
 		}
-	}
+	};
 
 	useEffect(() => {
 		async function getUsers() {
@@ -58,7 +58,7 @@ export default function UsersTable() {
 		});
 	}, [session]);
 
-	if (!users) {
+	if (users === undefined) {
 		return (
 			<>
 				<div className="my-4 grid grid-cols-5 items-center overflow-x-auto">
@@ -78,7 +78,7 @@ export default function UsersTable() {
 		);
 	}
 
-	if (users.length === 0) {
+	if (Array.isArray(users) && users.length === 0) {
 		return (
 			<>
 				<div className="my-4 grid grid-cols-5 items-center overflow-x-auto">

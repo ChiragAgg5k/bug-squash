@@ -4,9 +4,18 @@ import Link from "next/link";
 
 export default function NavBar() {
 	return (
-		<div className="navbar absolute bg-base-100 px-4 py-3">
+		<div className="navbar absolute bg-[#1E2329] px-4 py-3">
 			<div className="flex-1">
-				<Image src="/logo.png" alt="Logo" width={55} height={55} className=" rounded-full" />
+				<Image
+					src="/logo.png"
+					onClick={() => {
+						window.location.reload();
+					}}
+					alt="Logo"
+					width={55}
+					height={55}
+					className="cursor-pointer rounded-full transition-all ease-in-out hover:scale-105"
+				/>
 			</div>
 			<div className="flex flex-none">
 				<ul className="flex text-center text-zinc-400 ">

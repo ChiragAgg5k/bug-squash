@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { AssignedUser, fetchedUser } from "@/app/types";
 import { fetchUserDetails, fetchUsers } from "../../users";
@@ -111,18 +111,11 @@ export default function AssignUserModal({
 						))}
 
 						{assignedUsers.map((user, index) => (
-							<>
-								<p className="mb-3" key={`name ${index}`}>
-									{user.name}
-								</p>
-								<p className="mb-3" key={`email ${index}`}>
-									{user.email}
-								</p>
-								<p className="mb-3" key={`role ${index}`}>
-									{user.role}
-								</p>
+							<React.Fragment key={index}>
+								<p className="mb-3">{user.name}</p>
+								<p className="mb-3">{user.email}</p>
+								<p className="mb-3">{user.role}</p>
 								<input
-									key={`input ${index}`}
 									type="checkbox"
 									className="checkbox"
 									defaultChecked={user.assigned}
@@ -132,7 +125,7 @@ export default function AssignUserModal({
 										setAssignedUsers(newAssignedUsers);
 									}}
 								/>
-							</>
+							</React.Fragment>
 						))}
 					</div>
 

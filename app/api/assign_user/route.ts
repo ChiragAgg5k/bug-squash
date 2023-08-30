@@ -41,7 +41,9 @@ export async function DELETE(request: NextRequest) {
 	const userId = request.nextUrl.searchParams.get("userId")?.trim();
 	const userToDeleteId = request.nextUrl.searchParams.get("userToDeleteId")?.trim();
 
-	if (!userId || !userToDeleteId) return NextResponse.error();
+	if (!userId || !userToDeleteId) {
+		return NextResponse.error();
+	}
 
 	const client = await clientPromise;
 	const db = client.db();

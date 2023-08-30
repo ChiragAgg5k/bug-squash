@@ -37,7 +37,7 @@ export interface Ticket {
 interface TicketWithoutID extends Omit<Ticket, "_id"> {}
 
 export interface Comment {
-	_id: string;
+	comment: string;
 	userID: string;
-	text: string;
+	time: string;
 }

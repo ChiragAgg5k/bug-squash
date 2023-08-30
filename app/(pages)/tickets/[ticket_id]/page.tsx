@@ -1,39 +1,19 @@
-"use client";
-
 import { Ticket } from "@/app/types";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import ProjectDetails from "./ProjectDetails";
+import Comments from "./Comments";
 
-export default function Page({
+export default async function Page({
 	params,
 }: {
 	params: {
 		ticket_id: string;
 	};
 }) {
-	const [ticket, setTicket] = useState<Ticket | undefined>(undefined);
-
-	useEffect(() => {
-		if (!params.ticket_id) {
-			return;
-		}
-
-		fetch(`/api/ticket?ticketID=${params.ticket_id}`)
-			.then((res) => res.json())
-			.then((data) => {
-				setTicket(data);
-			})
-			.catch((err) => {
-				console.error(err);
-			});
-	}, [params.ticket_id]);
-
-	if (!ticket) {
-		return <h1>Loading...</h1>;
-	}
+	const res = await fetch(process.env.NEXT_PUBLIC_BASE_URL + `/api/ticket?ticketID=${params.ticket_id}`);
+	const ticket: Ticket = await res.json();
 
 	return (
-		<div>
+		<div className="mb-10">
 			<h1 className="mb-4 text-xl">
 				Ticket : {ticket.heading} -{" "}
 				<span
@@ -49,29 +29,23 @@ export default function Page({
 				</span>
 			</h1>
 			<div className="mb-4 border-b border-gray-500 pb-6">
-				<span className="mb-3 flex">
-					<p className="mr-8">
-						<span className="underline">Description :</span> {ticket.description}
+				<span className="mb-3 flex flex-col sm:flex-row">
+					<p className="mb-4 mr-8">
+						<span className="mr-2 underline">Description :</span> {ticket.description}
 					</p>
-					<p className="mr-8">
+					<p className="mb-4 mr-8">
 						<span className="underline">Type :</span> {ticket.type[0].toUpperCase() + ticket.type.slice(1)}
 					</p>
-					<p>
+					<p className="mb-4">
 						<span className="underline">Priority :</span>{" "}
 						{ticket.priority[0].toUpperCase() + ticket.priority.slice(1)}
 					</p>
 				</span>
-				<span className="flex">
-					<p className="mr-8">
-						<span className="underline">Project :</span> {ticket.projectID}
-					</p>
-
-					<Link href={`/projects/${ticket.projectID}`} className="text-teal-500 hover:underline">
-						Go to project page
-					</Link>
-				</span>
+				<ProjectDetails projectID={ticket.projectID} />
 			</div>
-			<button className="btn btn-accent btn-outline">Edit Ticket</button>
+			<button className="btn btn-accent btn-outline mb-8">Edit Ticket</button>
+
+			<Comments ticketID={ticket._id} />
 		</div>
 	);
 }
