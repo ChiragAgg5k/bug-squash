@@ -104,9 +104,12 @@ export default function Comments({ ticketID }: { ticketID: string }) {
 
 	if (!ticket) {
 		return (
-			<div className="flex min-h-[20dvh] items-center justify-center">
-				<p>loading...</p>
-			</div>
+			<>
+				<h2 className="mb-4 text-xl">Comments:</h2>
+				<div className="flex min-h-[20dvh] items-center justify-center">
+					<p>loading...</p>
+				</div>
+			</>
 		);
 	}
 
@@ -127,6 +130,8 @@ export default function Comments({ ticketID }: { ticketID: string }) {
 				id="user-comment"
 				placeholder="Add a comment ..."
 			/>
+
+			{ticket.comments.length === 0 && <p className="mb-4">No comments yet.</p>}
 
 			{ticket.comments.reverse().map((comment, index) => {
 				return (

@@ -97,7 +97,7 @@ export default function TicketsTable() {
 										)}
 										<td className="px-4 py-4">
 											<button
-												className="btn btn-outline mb-2"
+												className="btn btn-outline mb-2 mr-2"
 												onClick={() => {
 													router.push(`/tickets/${ticket._id}`);
 												}}
