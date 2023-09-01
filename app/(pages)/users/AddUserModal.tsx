@@ -22,7 +22,7 @@ export default function AddUserModal() {
 	const { data: session } = useSession();
 
 	useEffect(() => {
-		fetch("/api/all_users")
+		fetch("/api/users")
 			.then((res) => res.json())
 			.then((data) => {
 				setAllUsers(data);

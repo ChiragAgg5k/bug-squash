@@ -1,4 +1,4 @@
-import { Ticket, TicketWithoutID } from "@/app/types";
+import { TicketWithoutID } from "@/app/types";
 import clientPromise from "@/mongodb/config";
 import { ObjectId } from "mongodb";
 import { NextRequest, NextResponse } from "next/server";

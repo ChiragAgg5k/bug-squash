@@ -45,7 +45,7 @@ export default function Comments({ ticketID }: { ticketID: string }) {
 
 	useEffect(() => {
 		const fetchTicket = async () => {
-			const res = await fetch("/api/ticket?ticketID=" + ticketID);
+			const res = await fetch("/api/tickets/ticket?ticketID=" + ticketID);
 			const ticket: Ticket = await res.json();
 
 			return ticket;

@@ -39,7 +39,7 @@ export async function POST(request: Request) {
 				},
 			}
 		)
-		.catch((err) => {
+		.catch(() => {
 			return NextResponse.error();
 		});
 
@@ -65,7 +65,7 @@ export async function DELETE(request: NextRequest) {
 				},
 			}
 		)
-		.catch((err) => {
+		.catch(() => {
 			return NextResponse.error();
 		});
 

@@ -9,7 +9,7 @@ export default function AssignedTickets({ projectID }: { projectID: string }) {
 
 	useEffect(() => {
 		async function getTickets() {
-			const res = await fetch(`/api/assigned-tickets?projectID=${projectID}`);
+			const res = await fetch(`/api/tickets/assigned-tickets?projectID=${projectID}`);
 			const data = await res.json();
 
 			return data;

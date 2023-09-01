@@ -1,17 +1,20 @@
 "use client";
 
-import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { fetchUserDetails } from "../../users";
 import { AssignedUser } from "@/app/types";
 import { fetchRole } from "..";
 
-export default function AssignedUsers({ projectAssignedUsers }: { projectAssignedUsers: string[] }) {
-	const { data: session } = useSession();
+export default function AssignedUsers({
+	projectAssignedUsers,
+	projectOwnerID,
+}: {
+	projectAssignedUsers: string[];
+	projectOwnerID: string;
+}) {
 	const [assignedUsers, setAssignedUsers] = useState<AssignedUser[] | undefined>(undefined);
 
 	useEffect(() => {
-		if (!session) return;
 		async function getUsers() {
 			if (projectAssignedUsers === undefined) return;
 
@@ -22,7 +25,7 @@ export default function AssignedUsers({ projectAssignedUsers }: { projectAssigne
 					});
 
 					userDetail.role = await fetchRole({
-						userID: session?.user.id,
+						userID: projectOwnerID,
 						assignedID: userID,
 					});
 					return userDetail;
@@ -40,7 +43,7 @@ export default function AssignedUsers({ projectAssignedUsers }: { projectAssigne
 
 			setAssignedUsers(users);
 		});
-	}, [projectAssignedUsers, session]);
+	}, [projectAssignedUsers, projectOwnerID]);
 
 	if (!assignedUsers) {
 		return <p className="col-span-3 my-4 text-center">Loading...</p>;

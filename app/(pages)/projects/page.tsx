@@ -51,6 +51,43 @@ function TableBody(data: Project[], currPageIndex: number, setProjectToDelete: (
 	return rows;
 }
 
+function AssignedProjectsTableBody(
+	data: Project[],
+	currPageIndex: number,
+	setProjectToDelete: (project: Project) => void
+) {
+	const totalLength = data.length;
+	const rows = [];
+
+	if (totalLength === 0) {
+		return (
+			<tr className="border-b border-gray-700 dark:border-gray-300">
+				<td colSpan={3} className="text-center">
+					<p className="my-4">You are not assigned to any projects</p>
+				</td>
+			</tr>
+		);
+	}
+
+	for (let i = currPageIndex; i < currPageIndex + PAGE_SIZE && i < totalLength; i++) {
+		rows.push(
+			<tr key={i} className="border-b border-gray-700 dark:border-gray-500">
+				<td className="px-4 py-2">{data[i].name}</td>
+				<td className="px-4 py-4">
+					<p className="line-clamp-4">{data[i].description}</p>
+				</td>
+				<td className="px-4 py-2">
+					<Link href={`/projects/${data[i]._id}`} className="btn btn-outline mr-4">
+						Details
+					</Link>
+				</td>
+			</tr>
+		);
+	}
+
+	return rows;
+}
+
 function LoadingTable() {
 	return (
 		<tbody>
@@ -72,6 +109,15 @@ export default function ProjectsPage() {
 		async (url) => {
 			const response = await fetch(url);
 			const data = await response.json();
+			return data;
+		}
+	);
+
+	const { data: assigned_projects } = useSWR<Project[] | undefined>(
+		`/api/projects/assigned-projects?userID=${session?.user.id}`,
+		async (url) => {
+			const res = await fetch(url);
+			const data = await res.json();
 			return data;
 		}
 	);
@@ -126,6 +172,27 @@ export default function ProjectsPage() {
 			</div>
 			<CreateProjectDialog userID={session?.user.id} />
 			<ConfirmDeleteProject projectToDelete={projectToDelete} />
+
+			<h2 className="mb-4 text-2xl">Projects Assigned to You</h2>
+			<p>These are projects that you are assigned to. You can view them, but you cannot delete them.</p>
+
+			<div className="mb-24 overflow-x-auto">
+				<table className="mt-6 w-full border-b border-gray-700 dark:border-gray-300">
+					<thead>
+						<tr className="border-b border-gray-700 dark:border-gray-300">
+							<th className="px-4 py-4">Name</th>
+							<th className="px-4 py-4">Description</th>
+							<th className="px-4 py-4">Operations</th>
+						</tr>
+					</thead>
+
+					{assigned_projects === undefined ? (
+						<LoadingTable />
+					) : (
+						<tbody>{AssignedProjectsTableBody(assigned_projects, 0, setProjectToDelete)}</tbody>
+					)}
+				</table>
+			</div>
 		</>
 	);
 }

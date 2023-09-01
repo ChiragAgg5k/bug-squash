@@ -27,7 +27,7 @@ export async function POST(request: Request) {
 	const project = await db
 		.collection("projects")
 		.insertOne(data)
-		.catch((err) => {
+		.catch(() => {
 			return NextResponse.error();
 		});
 
@@ -47,7 +47,7 @@ export async function DELETE(request: NextRequest) {
 	const project = await db
 		.collection("projects")
 		.deleteOne({ _id: new ObjectId(projectId) })
-		.catch((err) => {
+		.catch(() => {
 			return NextResponse.error();
 		});
 
