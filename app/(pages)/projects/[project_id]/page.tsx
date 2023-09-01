@@ -2,6 +2,7 @@ import Link from "next/link";
 import AssignUserModal from "./AssignUserModal";
 import AssignedUsers from "./AssignedUsers";
 import fetchProject from ".";
+import AssignedTickets from "./AssignedTickets";
 
 export default async function ProjectPage({
 	params,
@@ -54,8 +55,8 @@ export default async function ProjectPage({
 					</Link>
 				</div>
 			</div>
-			<div className="flex">
-				<div className="w-full">
+			<div className="flex flex-col sm:flex-row">
+				<div className="mb-8 w-full">
 					<h2 className="mb-4 text-lg">Assigned Users:</h2>
 					<AssignedUsers projectAssignedUsers={project.userIDs} />
 					<AssignUserModal projectId={project._id.toString()} projectUserIDs={project.userIDs} />
@@ -63,6 +64,7 @@ export default async function ProjectPage({
 
 				<div className="w-full">
 					<h2 className="mb-4 text-lg">Tickets for this project:</h2>
+					<AssignedTickets projectID={project._id.toString()} />
 				</div>
 			</div>
 		</>

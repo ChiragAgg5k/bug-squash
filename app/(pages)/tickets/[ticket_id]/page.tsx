@@ -43,7 +43,7 @@ export default async function Page({
 				</span>
 				<ProjectDetails projectID={ticket.projectID} />
 			</div>
-			<button className="btn btn-accent btn-outline mb-8">Edit Ticket</button>
+			<button className="btn btn-accent mb-8 dark:btn-outline">Edit Ticket</button>
 
 			<Comments ticketID={ticket._id} />
 		</div>
