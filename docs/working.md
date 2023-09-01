@@ -5,6 +5,10 @@
 -   [Working](#working)
     -   [Table of Contents](#table-of-contents)
     -   [Authentication](#authentication)
+    -   [SessionProvider](#sessionprovider)
+    -   [Pages](#pages)
+    -   [Environment Variables](#environment-variables)
+    -   [Data Fetching](#data-fetching)
 
 ## Authentication
 
@@ -92,9 +96,21 @@ Next auth has predefined pages for authentication. You can find more information
 -   `/api/auth/verifyRequest`: Used to check email verification requests.
 -   `/api/auth/newUser`: Users are redirected to this page if they are a new user.
 
-# Environment Variables
+## Environment Variables
 
 Already explained all the environment variables used and why [here](../docs/ReadMe.md#installation). But one thing with them is that when used directly, they flag TypeScript errors for possibly not being defined.
 
 So, to fix that, I used a npm module called zod to define the environment variables. You can find more information about zod [here](https://www.npmjs.com/package/zod).
 All it does is verify if the environment variables are non empty, and export a custom env object. Code for it is [here](../env.ts).
+
+## Data Fetching
+
+Since the id of the user is only accessible through the `useSession` hook, the data fetching functions are required to be done on client side. So, originally all the data was fetched by `useEffect` hooks, but that lead to messy code, but more importantly, always showed loading states on each page visit. Migrating the code to use `useSWR` hooks fixed that. You can find more information about `useSWR` hooks [here](https://swr.vercel.app/).
+
+Example of fetching data using `useSWR` hooks:
+
+```typescript
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
+
+const { data: bug, error } = useSWR(() => (session ? `/api/bugs/${id}` : null), fetcher);
+```

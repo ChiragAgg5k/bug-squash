@@ -1,18 +1,25 @@
 "use client";
 
 import { Ticket } from "@/app/types";
-import { useEffect, useState } from "react";
 import { fetchSingleProject } from ".";
 import { Project } from "@playwright/test";
 import { useSession } from "next-auth/react";
 import CreateTicketModal from "./CreateTicketModal";
-import { useRouter } from "next/navigation";
 import useSWR from "swr";
+import Link from "next/link";
+
+function multiFetcher(tickets: Ticket[]) {
+	return Promise.all(
+		tickets.map((ticket) => {
+			return fetchSingleProject({
+				projectID: ticket.projectID,
+			});
+		})
+	);
+}
 
 export default function TicketsTable() {
-	const [projects, setProjects] = useState<Project[] | undefined>(undefined);
 	const { data: session } = useSession();
-	const router = useRouter();
 
 	const { data: tickets } = useSWR<Ticket[] | undefined>(`/api/tickets?userID=${session?.user.id}`, async (url) => {
 		const response = await fetch(url);
@@ -20,25 +27,7 @@ export default function TicketsTable() {
 		return data;
 	});
 
-	useEffect(() => {
-		if (!tickets) return;
-
-		const getProjects = async () => {
-			const projects = await Promise.all(
-				tickets.map((ticket) => {
-					return fetchSingleProject({
-						projectID: ticket.projectID,
-					});
-				})
-			);
-
-			return projects;
-		};
-
-		getProjects().then((data) => {
-			setProjects(data);
-		});
-	}, [tickets]);
+	const { data: projects } = useSWR<Project[] | undefined>(tickets, multiFetcher);
 
 	return (
 		<>
@@ -94,14 +83,9 @@ export default function TicketsTable() {
 											<td className="px-4 py-4 text-green-500">{ticket.priority}</td>
 										)}
 										<td className="px-4 py-4">
-											<button
-												className="btn btn-outline mb-2 mr-2"
-												onClick={() => {
-													router.push(`/tickets/${ticket._id}`);
-												}}
-											>
+											<Link className="btn btn-outline mb-2 mr-2" href={`/tickets/${ticket._id}`}>
 												Details
-											</button>
+											</Link>
 											<button className="btn btn-accent dark:btn-outline">Close</button>
 										</td>
 									</tr>
