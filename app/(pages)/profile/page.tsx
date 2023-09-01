@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
-import { signOut } from "next-auth/react";
 import SignoutButton from "./SignoutButton";
 
 export default async function ProfilePage() {

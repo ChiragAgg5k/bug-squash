@@ -12,14 +12,6 @@ export async function postTicket(ticket: TicketWithoutID) {
 	return data;
 }
 
-export async function getTickets({ userID }: { userID: string }) {
-	const response = await fetch(`/api/tickets?userID=${userID}`, {
-		method: "GET",
-	});
-	const data = await response.json();
-	return data;
-}
-
 export async function fetchSingleProject({ projectID }: { projectID: string }) {
 	const response = await fetch(`/api/project?projectID=${projectID}`, {
 		method: "GET",

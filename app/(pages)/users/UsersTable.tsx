@@ -1,16 +1,39 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { fetchUserDetails, fetchUsers, modifyUser } from ".";
-import { useEffect, useState } from "react";
+import { fetchUserDetails, modifyUser } from ".";
+import React, { useState } from "react";
 import { AssignedUser, fetchedUser } from "@/app/types";
 import DeleteUserModal from "./DeleteUserModal";
+import useSWR from "swr";
 
 const HEADERS = ["User", "Email", "Role", "Options"];
 
+function multiFetcher(userIds: AssignedUser[]) {
+	return Promise.all(
+		userIds.map(async (user) => {
+			const userDetail = await fetchUserDetails({
+				userID: Object.keys(user)[0],
+			});
+
+			userDetail.role = Object.values(user)[0];
+			return userDetail;
+		})
+	);
+}
+
 export default function UsersTable() {
 	const { data: session } = useSession();
-	const [users, setUsers] = useState<fetchedUser[] | undefined>(undefined);
+	const { data: userIds } = useSWR<AssignedUser[] | undefined>(
+		`/api/assign_user?assigneesId=${session ? session.user.id : ""}`,
+		async (url) => {
+			const response = await fetch(url);
+			const data = await response.json();
+			return data;
+		}
+	);
+
+	const { data: users } = useSWR<fetchedUser[] | undefined>(userIds, multiFetcher);
 	const [selectedUser, setSelectedUser] = useState<fetchedUser | undefined>(undefined);
 
 	const handleMoifyUser = async () => {
@@ -26,37 +49,6 @@ export default function UsersTable() {
 			window.location.reload();
 		}
 	};
-
-	useEffect(() => {
-		async function getUsers() {
-			const userIds: AssignedUser[] = await fetchUsers({
-				assigneesId: session?.user.id,
-			});
-
-			if (userIds === undefined) return;
-
-			const users = await Promise.all(
-				userIds.map(async (user) => {
-					const userDetail = await fetchUserDetails({
-						userID: Object.keys(user)[0],
-					});
-
-					userDetail.role = Object.values(user)[0];
-					return userDetail;
-				})
-			);
-
-			return users;
-		}
-
-		getUsers().then((users) => {
-			if (users === undefined) {
-				setUsers([]);
-				return;
-			}
-			setUsers(users);
-		});
-	}, [session]);
 
 	if (users === undefined) {
 		return (
@@ -112,8 +104,8 @@ export default function UsersTable() {
 					</h3>
 				))}
 
-				{users.map((user) => (
-					<>
+				{users.map((user, index) => (
+					<React.Fragment key={index}>
 						<p className="mb-3">{user.name}</p>
 						<p className="col-span-2 mb-3">{user.email}</p>
 						<p className="mb-3">{user.role}</p>
@@ -137,7 +129,7 @@ export default function UsersTable() {
 								Delete
 							</button>
 						</div>
-					</>
+					</React.Fragment>
 				))}
 			</div>
 

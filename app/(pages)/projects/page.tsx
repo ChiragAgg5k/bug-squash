@@ -1,12 +1,14 @@
 "use client";
-import React, { useEffect, useState } from "react";
-import { PAGE_SIZE, fetchProjects } from ".";
+import React, { useState } from "react";
+import { PAGE_SIZE } from ".";
 import { Project } from "@/app/types";
 import { useSession } from "next-auth/react";
-import CreateProjectDialog, { FormValues } from "./CreateProjectDialog";
+import CreateProjectDialog from "./CreateProjectDialog";
 import Link from "next/link";
 import ConfirmDeleteProject from "./ConfirmDeleteProject";
+import useSWR from "swr";
 
+/* eslint-disable */
 function TableBody(data: Project[], currPageIndex: number, setProjectToDelete: (project: Project) => void) {
 	const totalLength = data.length;
 	const rows = [];
@@ -63,21 +65,16 @@ function LoadingTable() {
 
 export default function ProjectsPage() {
 	const [pagesToShow, setPagesToShow] = useState(0);
-	const [projects, setProjects] = useState<Project[] | undefined>(undefined);
 	const [projectToDelete, setProjectToDelete] = useState<Project | undefined>(undefined);
 	const { data: session } = useSession();
-
-	useEffect(() => {
-		if (!session?.user?.id) {
-			return;
+	const { data: projects } = useSWR<Project[] | undefined>(
+		`/api/projects?userID=${session?.user.id}`,
+		async (url) => {
+			const response = await fetch(url);
+			const data = await response.json();
+			return data;
 		}
-
-		fetchProjects({
-			userID: session?.user?.id,
-		}).then((data) => {
-			setProjects(data);
-		});
-	}, [session?.user?.id]);
+	);
 
 	return (
 		<>

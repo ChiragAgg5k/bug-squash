@@ -2,9 +2,8 @@
 import { useSession } from "next-auth/react";
 import React, { useEffect, useState } from "react";
 import { fetchProjects } from "../projects";
-import { Project, Ticket, TicketWithoutID } from "@/app/types";
+import { Project, TicketWithoutID } from "@/app/types";
 import { postTicket } from ".";
-import { set } from "zod";
 
 export default function CreateTicketModal() {
 	const [ticket, setTicket] = useState<TicketWithoutID>({
