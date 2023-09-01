@@ -2,25 +2,23 @@
 
 import { Ticket } from "@/app/types";
 import { useEffect, useState } from "react";
-import { fetchSingleProject, getTickets } from ".";
+import { fetchSingleProject } from ".";
 import { Project } from "@playwright/test";
 import { useSession } from "next-auth/react";
 import CreateTicketModal from "./CreateTicketModal";
 import { useRouter } from "next/navigation";
+import useSWR from "swr";
 
 export default function TicketsTable() {
-	const [tickets, setTickets] = useState<Ticket[] | undefined>(undefined);
 	const [projects, setProjects] = useState<Project[] | undefined>(undefined);
 	const { data: session } = useSession();
 	const router = useRouter();
 
-	useEffect(() => {
-		getTickets({
-			userID: session?.user?.id,
-		}).then((data) => {
-			setTickets(data);
-		});
-	}, [session?.user?.id]);
+	const { data: tickets } = useSWR<Ticket[] | undefined>(`/api/tickets?userID=${session?.user.id}`, async (url) => {
+		const response = await fetch(url);
+		const data = await response.json();
+		return data;
+	});
 
 	useEffect(() => {
 		if (!tickets) return;
