@@ -2,7 +2,7 @@
 
 import { Comment, Ticket, fetchedUser } from "@/app/types";
 import { useSession } from "next-auth/react";
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchUserDetails } from "../../users";
 
 function formatDate(date: string) {

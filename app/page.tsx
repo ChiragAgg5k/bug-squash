@@ -1,6 +1,6 @@
 "use client";
 import { useSession } from "next-auth/react";
-import { redirect, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
 	const { status } = useSession();
@@ -8,7 +8,7 @@ export default function Page() {
 
 	if (status === "loading") {
 		return (
-			<div className="flex h-screen items-center justify-center">
+			<div className="flex flex-grow items-center justify-center">
 				<p>Loading...</p>
 			</div>
 		);

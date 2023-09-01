@@ -2,7 +2,13 @@ import { Project } from "@/app/types";
 import { deleteProject } from ".";
 
 export default function ConfirmDeleteProject({ projectToDelete }: { projectToDelete: Project | undefined }) {
-	const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {};
+	const handleFormSubmit = () => {
+		deleteProject({
+			projectId: projectToDelete?._id,
+		}).then(() => {
+			window.location.reload();
+		});
+	};
 
 	return (
 		<>
@@ -12,7 +18,7 @@ export default function ConfirmDeleteProject({ projectToDelete }: { projectToDel
 					className="modal-box"
 					onSubmit={(e) => {
 						e.preventDefault();
-						handleFormSubmit(e);
+						handleFormSubmit();
 					}}
 				>
 					<h3 className="mb-4 text-center text-xl font-bold">Delete Project</h3>
@@ -21,16 +27,7 @@ export default function ConfirmDeleteProject({ projectToDelete }: { projectToDel
 						<strong className=" text-teal-500">{projectToDelete?.name}</strong>?
 					</p>
 					<div className="flex items-center justify-center">
-						<button
-							className="btn btn-outline m-2 ml-2"
-							onClick={() => {
-								deleteProject({
-									projectId: projectToDelete?._id,
-								}).then(() => {
-									window.location.reload();
-								});
-							}}
-						>
+						<button type="submit" className="btn btn-outline m-2 ml-2">
 							Yes, Delete
 						</button>
 						<button
