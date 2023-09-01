@@ -23,11 +23,11 @@ const authOptions: NextAuthOptions = {
 					type: "email",
 					placeholder: "demo@gmail.com",
 				},
-				password: { label: "Password", type: "password" },
+				password: { label: "Password", type: "password", placeholder: "demo123" },
 			},
 
 			// @ts-ignore
-			async authorize(credentials, req) {
+			async authorize(credentials) {
 				if (credentials === undefined) throw new Error("Credentials are undefined");
 
 				const credentialDetails = {
