@@ -23,9 +23,9 @@ function multiFetcher(userIds: AssignedUser[]) {
 }
 
 export default function UsersTable() {
-	const { data: session } = useSession();
+	const { data: session, status } = useSession();
 	const { data: userIds } = useSWR<AssignedUser[] | undefined>(
-		`/api/users/assign_user?assigneesId=${session ? session.user.id : ""}`,
+		status === "loading" ? undefined : `/api/users/assign_user?assigneesId=${session ? session.user.id : ""}`,
 		async (url) => {
 			const response = await fetch(url);
 			const data = await response.json();

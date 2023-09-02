@@ -1,10 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
 import { Session } from "next-auth";
 import { postUser } from ".";
 import { AssignedUser } from "@/app/types";
+import useSWR from "swr";
 
 interface UserDetails {
 	email: string;
@@ -17,20 +18,17 @@ export default function AddUserModal() {
 		role: "",
 	});
 
-	const [allUsers, setAllUsers] = useState<AssignedUser[]>([]);
+	const { data: allUsers } = useSWR<AssignedUser[]>("/api/users", async (url) => {
+		const res = await fetch(url);
+		const data = await res.json();
+		return data;
+	});
+
 	const [errorMessage, setErrorMessage] = useState<string | null>(null);
 	const { data: session } = useSession();
 
-	useEffect(() => {
-		fetch("/api/users")
-			.then((res) => res.json())
-			.then((data) => {
-				setAllUsers(data);
-			});
-	}, []);
-
 	const handleSubmit = async (user: UserDetails, session: Session | null) => {
-		if (user.role === "") {
+		if (user.role === "" || allUsers === undefined) {
 			setErrorMessage("Please select a role");
 			return;
 		}

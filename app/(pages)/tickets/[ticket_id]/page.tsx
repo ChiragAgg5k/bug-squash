@@ -9,7 +9,7 @@ export default async function Page({
 		ticket_id: string;
 	};
 }) {
-	const res = await fetch(process.env.NEXT_PUBLIC_BASE_URL + `/api/ticket?ticketID=${params.ticket_id}`);
+	const res = await fetch(process.env.NEXT_PUBLIC_BASE_URL + `/api/tickets/ticket?ticketID=${params.ticket_id}`);
 	const ticket: Ticket = await res.json();
 
 	return (

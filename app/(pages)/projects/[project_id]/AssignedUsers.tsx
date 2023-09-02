@@ -1,49 +1,46 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { fetchUserDetails } from "../../users";
 import { AssignedUser } from "@/app/types";
 import { fetchRole } from "..";
+import useSWR from "swr";
 
+function multiFetcher(params: [string[], string]) {
+	const projectAssignedUsers = params[0];
+	const projectOwnerID = params[1];
+
+	if (projectAssignedUsers === undefined) return Promise.resolve([]);
+
+	return Promise.all(
+		projectAssignedUsers.map(async (userID: string) => {
+			const userDetail = await fetchUserDetails({
+				userID: userID,
+			});
+
+			userDetail.role = await fetchRole({
+				userID: projectOwnerID,
+				assignedID: userID,
+			});
+			return userDetail;
+		})
+	);
+}
 export default function AssignedUsers({
 	projectAssignedUsers,
 	projectOwnerID,
 }: {
-	projectAssignedUsers: string[];
+	projectAssignedUsers: string[] | undefined;
 	projectOwnerID: string;
 }) {
-	const [assignedUsers, setAssignedUsers] = useState<AssignedUser[] | undefined>(undefined);
-
-	useEffect(() => {
-		async function getUsers() {
-			if (projectAssignedUsers === undefined) return;
-
-			const users = await Promise.all(
-				projectAssignedUsers.map(async (userID: string) => {
-					const userDetail = await fetchUserDetails({
-						userID: userID,
-					});
-
-					userDetail.role = await fetchRole({
-						userID: projectOwnerID,
-						assignedID: userID,
-					});
-					return userDetail;
-				})
-			);
-
-			return users;
+	const { data: assignedUsers } = useSWR<AssignedUser[] | undefined>(
+		[projectAssignedUsers, projectOwnerID],
+		multiFetcher,
+		{
+			onError: (err) => {
+				console.log(err);
+			},
 		}
-
-		getUsers().then((users) => {
-			if (users === undefined) {
-				setAssignedUsers([]);
-				return;
-			}
-
-			setAssignedUsers(users);
-		});
-	}, [projectAssignedUsers, projectOwnerID]);
+	);
 
 	if (!assignedUsers) {
 		return <p className="col-span-3 my-4 text-center">Loading...</p>;

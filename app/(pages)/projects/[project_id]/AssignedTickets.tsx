@@ -1,24 +1,18 @@
 "use client";
 
 import { Ticket } from "@/app/types";
-import { useEffect, useState } from "react";
 import Link from "next/link";
+import useSWR from "swr";
 
 export default function AssignedTickets({ projectID }: { projectID: string }) {
-	const [tickets, setTickets] = useState<Ticket[] | undefined>(undefined);
-
-	useEffect(() => {
-		async function getTickets() {
-			const res = await fetch(`/api/tickets/assigned-tickets?projectID=${projectID}`);
+	const { data: tickets } = useSWR<Ticket[] | undefined>(
+		`/api/tickets/assigned-tickets?projectID=${projectID}`,
+		async (url) => {
+			const res = await fetch(url);
 			const data = await res.json();
-
 			return data;
 		}
-
-		getTickets().then((tickets) => {
-			setTickets(tickets);
-		});
-	}, [projectID]);
+	);
 
 	if (tickets === undefined) return <p>Loading...</p>;
 
