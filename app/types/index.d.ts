@@ -41,4 +41,5 @@ export interface Comment {
 	comment: string;
 	userID: string;
 	time: string;
+	userName?: string;
 }
