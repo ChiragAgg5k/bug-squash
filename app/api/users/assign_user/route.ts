@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
 	const res = await db
 		.collection("users")
 		.updateOne({ _id: new ObjectId(assigneesId) }, { $addToSet: { assignedUsers: dataToInsert } })
-		.catch((err) => {
+		.catch(() => {
 			return NextResponse.error();
 		});
 
@@ -51,7 +51,7 @@ export async function DELETE(request: NextRequest) {
 	const res = await db
 		.collection("users")
 		.updateOne({ _id: new ObjectId(userId) }, { $pull: { assignedUsers: { [userToDeleteId]: { $exists: true } } } })
-		.catch((err) => {
+		.catch(() => {
 			return NextResponse.error();
 		});
 

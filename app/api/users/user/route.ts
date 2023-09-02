@@ -34,10 +34,10 @@ export async function POST(request: NextRequest) {
 	const client = await clientPromise;
 	const db = client.db();
 
-	const res = await db
+	await db
 		.collection("users")
 		.updateOne({ _id: new ObjectId(userId) }, { $pull: { assignedUsers: { [assignedUserId]: { $exists: true } } } })
-		.catch((err) => {
+		.catch(() => {
 			return NextResponse.error();
 		});
 
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
 	const response = await db
 		.collection("users")
 		.updateOne({ _id: new ObjectId(userId) }, { $addToSet: { assignedUsers: dataToInsert } })
-		.catch((err) => {
+		.catch(() => {
 			return NextResponse.error();
 		});
 

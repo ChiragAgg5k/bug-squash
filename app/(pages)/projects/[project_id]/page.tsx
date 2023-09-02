@@ -3,6 +3,7 @@ import AssignUserModal from "./AssignUserModal";
 import AssignedUsers from "./AssignedUsers";
 import fetchProject from ".";
 import AssignedTickets from "./AssignedTickets";
+import ProjectOwner from "./ProjectOwner";
 
 export default async function ProjectPage({
 	params,
@@ -47,6 +48,9 @@ export default async function ProjectPage({
 							</Link>
 						</p>
 					)}
+
+					<strong className="mr-2">Project Owner:</strong>
+					<ProjectOwner userID={project.userID} />
 				</div>
 				<div>
 					<button className="btn btn-outline my-4 ml-4">Edit</button>
@@ -58,7 +62,7 @@ export default async function ProjectPage({
 			<div className="flex flex-col sm:flex-row">
 				<div className="mb-8 w-full">
 					<h2 className="mb-4 text-lg">Assigned Users:</h2>
-					<AssignedUsers projectAssignedUsers={project.userIDs} />
+					<AssignedUsers projectAssignedUsers={project.userIDs} projectOwnerID={project.userID} />
 					<AssignUserModal projectId={project._id.toString()} projectUserIDs={project.userIDs} />
 				</div>
 

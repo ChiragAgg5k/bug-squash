@@ -38,7 +38,7 @@ export async function deleteProject({ projectId }: { projectId: string | undefin
 }
 
 export async function assignProject({ projectID, userID }: { projectID: string; userID: string }) {
-	const response = await fetch("/api/project_assignment", {
+	const response = await fetch("/api/projects/project_assignment", {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
@@ -50,7 +50,7 @@ export async function assignProject({ projectID, userID }: { projectID: string; 
 }
 
 export async function removeProject({ projectID, userID }: { projectID: string; userID: string }) {
-	const response = await fetch(`/api/project_assignment?projectID=${projectID}&userID=${userID}`, {
+	const response = await fetch(`/api/projects/project_assignment?projectID=${projectID}&userID=${userID}`, {
 		method: "DELETE",
 		headers: {
 			"Content-Type": "application/json",
@@ -61,7 +61,7 @@ export async function removeProject({ projectID, userID }: { projectID: string; 
 }
 
 export async function fetchRole({ userID, assignedID }: { userID: string; assignedID: string }) {
-	const response = await fetch(`/api/user_role?userID=${userID}&assignedID=${assignedID}`);
+	const response = await fetch(`/api/users/user_role?userID=${userID}&assignedID=${assignedID}`);
 	const data = await response.json();
 	return data;
 }

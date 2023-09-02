@@ -1,7 +1,7 @@
 import { TicketWithoutID } from "@/app/types";
 
 export async function postTicket(ticket: TicketWithoutID) {
-	const response = await fetch("/api/ticket", {
+	const response = await fetch("/api/tickets/ticket", {
 		method: "POST",
 		headers: {
 			"Content-Type": "application/json",
@@ -13,7 +13,7 @@ export async function postTicket(ticket: TicketWithoutID) {
 }
 
 export async function fetchSingleProject({ projectID }: { projectID: string }) {
-	const response = await fetch(`/api/project?projectID=${projectID}`, {
+	const response = await fetch(`/api/projects/project?projectID=${projectID}`, {
 		method: "GET",
 	});
 	const data = await response.json();

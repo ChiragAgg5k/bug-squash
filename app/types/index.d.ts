@@ -5,6 +5,7 @@ export interface Project {
 	userID: string;
 	name: string;
 	description: string;
+	userIDs: string[];
 }
 
 export interface AssignedUser {
@@ -30,14 +31,15 @@ export interface Ticket {
 	type: "bug" | "feature" | "improvement" | "documentation";
 	priority: "low" | "medium" | "high" | "urgent";
 	status: "open" | "in-progress" | "closed";
-	assignedUsers: AssignedUser[];
 	comments: Comment[];
 }
 
+// eslint-disable-next-line
 interface TicketWithoutID extends Omit<Ticket, "_id"> {}
 
 export interface Comment {
 	comment: string;
 	userID: string;
 	time: string;
+	userName?: string;
 }

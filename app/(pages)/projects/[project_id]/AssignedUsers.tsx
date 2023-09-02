@@ -1,46 +1,46 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
 import { fetchUserDetails } from "../../users";
 import { AssignedUser } from "@/app/types";
 import { fetchRole } from "..";
+import useSWR from "swr";
 
-export default function AssignedUsers({ projectAssignedUsers }: { projectAssignedUsers: string[] }) {
-	const { data: session } = useSession();
-	const [assignedUsers, setAssignedUsers] = useState<AssignedUser[] | undefined>(undefined);
+function multiFetcher(params: [string[], string]) {
+	const projectAssignedUsers = params[0];
+	const projectOwnerID = params[1];
 
-	useEffect(() => {
-		if (!session) return;
-		async function getUsers() {
-			if (projectAssignedUsers === undefined) return;
+	if (projectAssignedUsers === undefined) return Promise.resolve([]);
 
-			const users = await Promise.all(
-				projectAssignedUsers.map(async (userID: string) => {
-					const userDetail = await fetchUserDetails({
-						userID: userID,
-					});
+	return Promise.all(
+		projectAssignedUsers.map(async (userID: string) => {
+			const userDetail = await fetchUserDetails({
+				userID: userID,
+			});
 
-					userDetail.role = await fetchRole({
-						userID: session?.user.id,
-						assignedID: userID,
-					});
-					return userDetail;
-				})
-			);
-
-			return users;
+			userDetail.role = await fetchRole({
+				userID: projectOwnerID,
+				assignedID: userID,
+			});
+			return userDetail;
+		})
+	);
+}
+export default function AssignedUsers({
+	projectAssignedUsers,
+	projectOwnerID,
+}: {
+	projectAssignedUsers: string[] | undefined;
+	projectOwnerID: string;
+}) {
+	const { data: assignedUsers } = useSWR<AssignedUser[] | undefined>(
+		[projectAssignedUsers, projectOwnerID],
+		multiFetcher,
+		{
+			onError: (err) => {
+				console.log(err);
+			},
 		}
-
-		getUsers().then((users) => {
-			if (users === undefined) {
-				setAssignedUsers([]);
-				return;
-			}
-
-			setAssignedUsers(users);
-		});
-	}, [projectAssignedUsers, session]);
+	);
 
 	if (!assignedUsers) {
 		return <p className="col-span-3 my-4 text-center">Loading...</p>;

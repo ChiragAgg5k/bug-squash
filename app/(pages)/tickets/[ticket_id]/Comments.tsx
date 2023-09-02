@@ -1,9 +1,9 @@
 "use client";
 
-import { Comment, Ticket, fetchedUser } from "@/app/types";
+import { Ticket } from "@/app/types";
 import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { fetchUserDetails } from "../../users";
+import { useState } from "react";
+import useSWR from "swr";
 
 function formatDate(date: string) {
 	const now = new Date();
@@ -36,54 +36,32 @@ function formatDate(date: string) {
 	return `${Math.floor(days / 365)} years ago`;
 }
 
+async function multiFetcher(ticketID: string) {
+	const res = await fetch(`/api/tickets/ticket?ticketID=${ticketID}`);
+	const ticket: Ticket = await res.json();
+	await Promise.all(
+		ticket.comments.map(async (comment) => {
+			const res = await fetch(`/api/users/user?userID=${comment.userID}`);
+			const user = await res.json();
+			comment.userName = user.name;
+		})
+	);
+
+	ticket.comments.reverse();
+	return ticket;
+}
+
 export default function Comments({ ticketID }: { ticketID: string }) {
 	const { data: session } = useSession();
 	const [comment, setComment] = useState<string>("");
-	const [commentedUsers, setCommentedUsers] = useState<fetchedUser[] | undefined>(undefined);
-
-	const [ticket, setTicket] = useState<Ticket | undefined>(undefined);
-
-	useEffect(() => {
-		const fetchTicket = async () => {
-			const res = await fetch("/api/ticket?ticketID=" + ticketID);
-			const ticket: Ticket = await res.json();
-
-			return ticket;
-		};
-
-		fetchTicket().then((ticket) => {
-			setTicket(ticket);
-		});
-	}, [ticketID]);
-
-	useEffect(() => {
-		if (!ticket) return;
-
-		const fetchCommentedUsers = async () => {
-			const users = await Promise.all(
-				ticket.comments.map(async (comment: Comment) => {
-					const userDetail = await fetchUserDetails({
-						userID: comment.userID,
-					});
-					return userDetail;
-				})
-			);
-
-			return users;
-		};
-
-		fetchCommentedUsers().then((users) => {
-			users.reverse();
-			setCommentedUsers(users);
-		});
-	}, [ticket]);
+	const { data: ticket } = useSWR<Ticket | undefined>(ticketID, multiFetcher);
 
 	const handlePostComment = async () => {
 		if (!comment || session?.user === undefined || ticket === undefined) {
 			return;
 		}
 
-		const response = await fetch("/api/comment", {
+		const response = await fetch("/api/tickets/comment", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -133,13 +111,11 @@ export default function Comments({ ticketID }: { ticketID: string }) {
 
 			{ticket.comments.length === 0 && <p className="mb-4">No comments yet.</p>}
 
-			{ticket.comments.reverse().map((comment, index) => {
+			{ticket.comments.map((comment, index) => {
 				return (
 					<div className="my-4" key={index}>
 						<p>
-							<span className="font-medium">
-								{commentedUsers ? commentedUsers[index].name : "Loading..."}
-							</span>
+							<span className="font-medium">{comment.userName}</span>
 							<span className="text-sm text-gray-500">{" - " + formatDate(comment.time)}</span>
 						</p>
 						<p>

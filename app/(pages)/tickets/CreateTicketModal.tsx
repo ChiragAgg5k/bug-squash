@@ -14,7 +14,6 @@ export default function CreateTicketModal() {
 		type: "bug",
 		priority: "low",
 		status: "open",
-		assignedUsers: [],
 		comments: [],
 	});
 

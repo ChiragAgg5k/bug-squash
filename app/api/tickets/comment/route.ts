@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
 				},
 			}
 		)
-		.catch((err) => {
+		.catch(() => {
 			return NextResponse.error();
 		});
 

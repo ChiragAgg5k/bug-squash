@@ -2,6 +2,7 @@ import clientPromise from "@/mongodb/config";
 import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
 
+// eslint-disable-next-line
 export async function GET(request: NextRequest) {
 	const session = await getServerSession();
 	if (!session)
