@@ -29,3 +29,44 @@ export async function GET(request: NextRequest) {
 
 	return NextResponse.json(ticket);
 }
+
+export async function PUT(request: NextRequest) {
+	const ticketID = request.nextUrl.searchParams.get("ticketID");
+
+	if (!ticketID) {
+		return NextResponse.next();
+	}
+
+	const client = await clientPromise;
+	const db = client.db();
+
+	const ticket: TicketWithoutID = await request.json();
+
+	const result = await db.collection("tickets").updateOne(
+		{
+			_id: new ObjectId(ticketID),
+		},
+		{
+			$set: ticket,
+		}
+	);
+
+	return NextResponse.json(result);
+}
+
+export async function DELETE(request: NextRequest) {
+	const ticketID = request.nextUrl.searchParams.get("ticketID");
+
+	if (!ticketID) {
+		return NextResponse.next();
+	}
+
+	const client = await clientPromise;
+	const db = client.db();
+
+	const result = await db.collection("tickets").deleteOne({
+		_id: new ObjectId(ticketID),
+	});
+
+	return NextResponse.json(result);
+}

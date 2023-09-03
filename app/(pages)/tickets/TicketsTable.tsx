@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import CreateTicketModal from "./CreateTicketModal";
 import useSWR from "swr";
 import Link from "next/link";
+import React, { useState } from "react";
 
 function multiFetcher(tickets: Ticket[]) {
 	return Promise.all(
@@ -21,13 +22,18 @@ function multiFetcher(tickets: Ticket[]) {
 export default function TicketsTable() {
 	const { data: session } = useSession();
 
-	const { data: tickets } = useSWR<Ticket[] | undefined>(`/api/tickets?userID=${session?.user.id}`, async (url) => {
-		const response = await fetch(url);
-		const data = await response.json();
-		return data;
-	});
+	const { data: tickets } = useSWR<Ticket[] | undefined>(
+		session !== undefined ? `/api/tickets?userID=${session?.user.id}` : undefined,
+		async (url) => {
+			const response = await fetch(url);
+			const data = await response.json();
+			return data;
+		}
+	);
 
 	const { data: projects } = useSWR<Project[] | undefined>(tickets, multiFetcher);
+
+	const [ticketToDelete, setTicketToDelete] = useState<Ticket | undefined>(undefined);
 
 	return (
 		<>
@@ -40,7 +46,7 @@ export default function TicketsTable() {
 							<th className="px-4 py-4">Description</th>
 							<th className="px-4 py-4">Project</th>
 							<th className="px-4 py-4">Priority</th>
-							<th className="px-4 py-4">Operations</th>
+							<th className="px-4 py-4"> </th>
 						</tr>
 					</thead>
 
@@ -83,10 +89,12 @@ export default function TicketsTable() {
 											<td className="px-4 py-4 text-green-500">{ticket.priority}</td>
 										)}
 										<td className="px-4 py-4">
-											<Link className="btn btn-outline mb-2 mr-2" href={`/tickets/${ticket._id}`}>
-												Details
+											<Link
+												className="btn btn-outline mb-2 mr-2 whitespace-nowrap"
+												href={`/tickets/${ticket._id}`}
+											>
+												Go To Ticket
 											</Link>
-											<button className="btn btn-accent dark:btn-outline">Close</button>
 										</td>
 									</tr>
 								)
@@ -95,7 +103,90 @@ export default function TicketsTable() {
 				</table>
 
 				<CreateTicketModal />
+
+				{tickets !== undefined && tickets?.filter((ticket) => ticket.status === "closed").length > 0 && (
+					<div className="mb-24 mt-12">
+						<h2 className="mb-4 text-2xl">Closed Tickets</h2>
+						<p>
+							Here are all of the tickets that have been closed. You can open them again if you need to.
+						</p>
+
+						<table className="mt-6 w-full border-b">
+							<thead>
+								<tr className="border-b border-gray-700 dark:border-gray-300">
+									<th className="px-4 py-4">Heading</th>
+									<th className="px-4 py-4">Description</th>
+									<th className="px-4 py-4">Project</th>
+									<th className="px-4 py-4">Priority</th>
+									<th className="px-4 py-4"> </th>
+								</tr>
+							</thead>
+
+							<tbody>
+								{tickets
+									?.filter((ticket) => ticket.status === "closed")
+									.map((ticket, index) => (
+										// @ts-ignore
+										<tr key={ticket._id} className="border-b border-gray-700 dark:border-gray-300">
+											<td className="px-4 py-4">{ticket.heading}</td>
+											<td className="line-clamp-3 px-4 py-4">{ticket.description}</td>
+											<td className="px-4 py-4">
+												{projects?.[index] ? projects[index].name : "Loading..."}
+											</td>
+											{ticket.priority === "urgent" ? (
+												<td className="px-4 py-4 text-red-500">
+													{ticket.priority.toUpperCase()}
+												</td>
+											) : ticket.priority === "high" ? (
+												<td className="px-4 py-4 text-orange-500">
+													{ticket.priority.toUpperCase()}
+												</td>
+											) : ticket.priority === "medium" ? (
+												<td className="px-4 py-4 text-yellow-500">{ticket.priority}</td>
+											) : (
+												<td className="px-4 py-4 text-green-500">{ticket.priority}</td>
+											)}
+											<td className="px-4 py-4">
+												<Link
+													className="btn btn-outline mb-2 mr-2 whitespace-nowrap"
+													href={`/tickets/${ticket._id}`}
+												>
+													Go To Ticket
+												</Link>
+												<button className="btn btn-error btn-outline" onClick={
+													() => {
+														setTicketToDelete(ticket);
+														(window as any).confirm_delete_ticket_modal.showModal();
+													}
+												}>Delete</button>
+											</td>
+										</tr>
+									))}
+							</tbody>
+						</table>
+					</div>
+				)}
 			</div>
+
+			<dialog id="confirm_delete_ticket_modal" className="modal">
+				<form method="dialog" className="modal-box">
+					<h3 className="text-lg font-bold">Delete Ticket?</h3>
+					<p>Are you sure you want to delete this ticket?</p>
+					<div className="modal-action">
+						<button className="btn btn-outline">Cancel</button>
+						<button className="btn btn-error btn-outline" onClick={
+							async () => {
+								if (ticketToDelete) {
+									await fetch(`/api/tickets/ticket?ticketID=${ticketToDelete._id}`, {
+										method: "DELETE",
+									});
+									window.location.reload();
+								}
+							}
+						}>Delete</button>
+					</div>
+				</form>
+			</dialog>
 		</>
 	);
 }

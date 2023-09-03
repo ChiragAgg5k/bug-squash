@@ -1,6 +1,7 @@
 import { Ticket } from "@/app/types";
 import ProjectDetails from "./ProjectDetails";
 import Comments from "./Comments";
+import UpdateTicketModal from "./UpdateTicketModal";
 
 export default async function Page({
 	params,
@@ -9,7 +10,9 @@ export default async function Page({
 		ticket_id: string;
 	};
 }) {
-	const res = await fetch(process.env.NEXT_PUBLIC_BASE_URL + `/api/tickets/ticket?ticketID=${params.ticket_id}`);
+	const res = await fetch(process.env.NEXT_PUBLIC_BASE_URL + `/api/tickets/ticket?ticketID=${params.ticket_id}`, {
+		next: { revalidate: 0 },
+	});
 	const ticket: Ticket = await res.json();
 
 	return (
@@ -21,7 +24,7 @@ export default async function Page({
 						ticket.status === "open"
 							? "text-teal-500"
 							: ticket.status === "in-progress"
-							? "text-orange-500"
+							? "text-yellow-500"
 							: "text-red-500"
 					}`}
 				>
@@ -43,7 +46,7 @@ export default async function Page({
 				</span>
 				<ProjectDetails projectID={ticket.projectID} />
 			</div>
-			<button className="btn btn-accent mb-8 dark:btn-outline">Edit Ticket</button>
+			<UpdateTicketModal ticket={ticket} />
 
 			<Comments ticketID={ticket._id} />
 		</div>
