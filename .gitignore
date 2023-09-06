@@ -37,5 +37,3 @@ next-env.d.ts
 
 # IDE
 /.idea
-
-playwright/.auth
