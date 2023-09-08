@@ -21,7 +21,7 @@ const authOptions: NextAuthOptions = {
 				email: {
 					label: "Email",
 					type: "email",
-					placeholder: "demo@bug-squash.com",
+					placeholder: "demo@bug-squash.co",
 				},
 				password: { label: "Password", type: "password", placeholder: "demo123" },
 			},
@@ -35,8 +35,8 @@ const authOptions: NextAuthOptions = {
 					password: credentials.password,
 				};
 
-				if (credentialDetails.email === "demo@bug-squash.com" && credentialDetails.password === "demo123") {
-					return { id: "64eedd0e70135bab8e7695bd", name: "Demo User", email: "demo@bug-squash.com" };
+				if (credentialDetails.email === "demo@bug-squash.co" && credentialDetails.password === "demo123") {
+					return { id: "64eedd0e70135bab8e7695bd", name: "Demo User", email: "demo@bug-squash.co" };
 				}
 			},
 		}),
