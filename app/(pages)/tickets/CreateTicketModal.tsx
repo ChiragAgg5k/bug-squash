@@ -46,7 +46,7 @@ export default function CreateTicketModal() {
 	return (
 		<>
 			<button
-				className="btn btn-accent my-10 font-bold"
+				className="btn btn-accent my-10 w-fit px-12 font-bold"
 				onClick={() => (window as any).create_ticket_modal.showModal()}
 			>
 				Create New Ticket

@@ -139,11 +139,13 @@ export default function UpdateTicketModal({ ticket }: { ticket: Ticket }) {
 						<option value={"urgent"}>Urgent</option>
 					</select>
 
-					<select className="select select-bordered mb-4 inline" onChange={(e) => {
-						// @ts-ignore
-						setNewTicket({ ...newTicket, status: e.target.value.toLowerCase() });
-					}}
-					defaultValue={ticket.status}
+					<select
+						className="select select-bordered mb-4 inline"
+						onChange={(e) => {
+							// @ts-ignore
+							setNewTicket({ ...newTicket, status: e.target.value.toLowerCase() });
+						}}
+						defaultValue={ticket.status}
 					>
 						<option disabled>Ticket Status</option>
 						<option value={"open"}>Open</option>

@@ -6,10 +6,10 @@ Bug Squash is a bug tracking application that allows users to list their project
 
 ## Table of Contents
 
-- [Table of Contents](#table-of-contents)
-- [Installation and Usage](#installation-and-usage)
-- [Contributing](#contributing)
-- [License](#license)
+-   [Table of Contents](#table-of-contents)
+-   [Installation and Usage](#installation-and-usage)
+-   [Contributing](#contributing)
+-   [License](#license)
 
 ## Installation and Usage
 

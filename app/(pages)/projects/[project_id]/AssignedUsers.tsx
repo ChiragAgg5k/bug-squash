@@ -37,7 +37,8 @@ export default function AssignedUsers({
 		multiFetcher,
 		{
 			onError: (err) => {
-				console.log(err);
+				console.error(err);
+				return err;
 			},
 		}
 	);

@@ -73,7 +73,9 @@ export default function TicketsTable() {
 									// @ts-ignore
 									<tr key={ticket._id} className="border-b border-gray-700 dark:border-gray-300">
 										<td className="px-4 py-4">{ticket.heading}</td>
-										<td className="line-clamp-3 px-4 py-4">{ticket.description}</td>
+										<td className="px-4 py-4">
+											<p className="line-clamp-3">{ticket.description}</p>
+										</td>
 										<td className="px-4 py-4">
 											{projects?.[index] ? projects[index].name : "Loading..."}
 										</td>
@@ -101,9 +103,11 @@ export default function TicketsTable() {
 						)}
 					</tbody>
 				</table>
+			</div>
 
-				<CreateTicketModal />
+			<CreateTicketModal />
 
+			<div className="overflow-x-scroll">
 				{tickets !== undefined && tickets?.filter((ticket) => ticket.status === "closed").length > 0 && (
 					<div className="mb-24 mt-12">
 						<h2 className="mb-4 text-2xl">Closed Tickets</h2>
@@ -153,12 +157,15 @@ export default function TicketsTable() {
 												>
 													Go To Ticket
 												</Link>
-												<button className="btn btn-error btn-outline" onClick={
-													() => {
+												<button
+													className="btn btn-error btn-outline"
+													onClick={() => {
 														setTicketToDelete(ticket);
 														(window as any).confirm_delete_ticket_modal.showModal();
-													}
-												}>Delete</button>
+													}}
+												>
+													Delete
+												</button>
 											</td>
 										</tr>
 									))}
@@ -174,16 +181,19 @@ export default function TicketsTable() {
 					<p>Are you sure you want to delete this ticket?</p>
 					<div className="modal-action">
 						<button className="btn btn-outline">Cancel</button>
-						<button className="btn btn-error btn-outline" onClick={
-							async () => {
+						<button
+							className="btn btn-error btn-outline"
+							onClick={async () => {
 								if (ticketToDelete) {
 									await fetch(`/api/tickets/ticket?ticketID=${ticketToDelete._id}`, {
 										method: "DELETE",
 									});
 									window.location.reload();
 								}
-							}
-						}>Delete</button>
+							}}
+						>
+							Delete
+						</button>
 					</div>
 				</form>
 			</dialog>
