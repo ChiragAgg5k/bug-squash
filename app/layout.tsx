@@ -22,7 +22,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 				<body suppressHydrationWarning={true}>
 					<NextTopLoader showSpinner={false} color="#0f766e" />
 					<NavBar />
-					<main className="mx-8 flex min-h-screen flex-col pt-28">{children}</main>
+					<main className="mx-4 flex min-h-screen flex-col pt-28 sm:mx-8">{children}</main>
 				</body>
 			</NextAuthProvider>
 		</html>
