@@ -31,7 +31,7 @@ function TableBody(data: Project[], currPageIndex: number, setProjectToDelete: (
 					<p className="line-clamp-4">{data[i].description}</p>
 				</td>
 				<td className="px-4 py-2">
-					<Link href={`/projects/${data[i]._id}`} className="btn btn-outline mr-4">
+					<Link href={`/projects/${data[i]._id}`} className="btn btn-neutral mr-4 dark:btn-outline">
 						Details
 					</Link>
 					<button
@@ -77,7 +77,7 @@ function AssignedProjectsTableBody(
 					<p className="line-clamp-4">{data[i].description}</p>
 				</td>
 				<td className="px-4 py-2">
-					<Link href={`/projects/${data[i]._id}`} className="btn btn-outline mr-4">
+					<Link href={`/projects/${data[i]._id}`} className="btn btn-neutral mr-4 dark:btn-outline">
 						Details
 					</Link>
 				</td>
@@ -145,7 +145,7 @@ export default function ProjectsPage() {
 								<tr>
 									<td colSpan={2}>
 										Current Page: {Math.floor(pagesToShow / PAGE_SIZE) + 1} of{" "}
-										{Math.ceil(projects.length / PAGE_SIZE)}
+										{Math.ceil(projects.length / PAGE_SIZE) || 1}
 									</td>
 									<td className="flex flex-col items-center justify-end text-right transition-all ease-in-out sm:flex-row">
 										<button

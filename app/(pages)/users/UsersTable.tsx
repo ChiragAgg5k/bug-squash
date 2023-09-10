@@ -36,7 +36,7 @@ export default function UsersTable() {
 	const { data: users } = useSWR<fetchedUser[] | undefined>(userIds, multiFetcher);
 	const [selectedUser, setSelectedUser] = useState<fetchedUser | undefined>(undefined);
 
-	const handleMoifyUser = async () => {
+	const handleModifyUser = async () => {
 		if (selectedUser === undefined) return;
 
 		const response = await modifyUser({
@@ -50,29 +50,9 @@ export default function UsersTable() {
 		}
 	};
 
-	if (users === undefined) {
+	if (userIds && userIds.length === 0) {
 		return (
-			<>
-				<div className="my-4 grid grid-cols-5 items-center overflow-x-auto">
-					{HEADERS.map((header, index) => (
-						<h3
-							className={`mb-3 border-b border-gray-600 pb-2 text-lg font-bold ${
-								header === "Email" ? "col-span-2" : ""
-							}`}
-							key={index}
-						>
-							{header}
-						</h3>
-					))}
-				</div>
-				<p className="col-span-3 my-4 text-center">Loading...</p>
-			</>
-		);
-	}
-
-	if (Array.isArray(users) && users.length === 0) {
-		return (
-			<>
+			<div className="mb-4">
 				<div className="my-4 grid grid-cols-5 items-center overflow-x-auto">
 					{HEADERS.map((header, index) => (
 						<h3
@@ -86,7 +66,27 @@ export default function UsersTable() {
 					))}
 				</div>
 				<p className="col-span-3 my-4 text-center">No Users Found.</p>
-			</>
+			</div>
+		);
+	}
+
+	if (users === undefined) {
+		return (
+			<div className="mb-4">
+				<div className="my-4 grid grid-cols-5 items-center overflow-x-auto">
+					{HEADERS.map((header, index) => (
+						<h3
+							className={`mb-3 border-b border-gray-600 pb-2 text-lg font-bold ${
+								header === "Email" ? "col-span-2" : ""
+							}`}
+							key={index}
+						>
+							{header}
+						</h3>
+					))}
+				</div>
+				<p className="col-span-3 my-4 text-center">Loading...</p>
+			</div>
 		);
 	}
 
@@ -111,7 +111,7 @@ export default function UsersTable() {
 						<p className="mb-3">{user.role}</p>
 						<div className="flex items-center justify-start">
 							<button
-								className="btn btn-outline m-2"
+								className="btn btn-neutral m-2 dark:btn-outline"
 								onClick={() => {
 									setSelectedUser(user);
 									(window as any).edit_user_modal.showModal();
@@ -140,7 +140,7 @@ export default function UsersTable() {
 					className="modal-box p-8"
 					onSubmit={(e) => {
 						e.preventDefault();
-						handleMoifyUser();
+						handleModifyUser();
 					}}
 				>
 					<h3 className="mb-4 text-xl font-bold">Edit User</h3>

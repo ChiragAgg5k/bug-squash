@@ -18,7 +18,7 @@ export interface fetchedUser {
 	email: string;
 	image: string | null;
 	emailVerified: boolean | null;
-	assignedUsers: AssignedUser[];
+	assignedUsers?: AssignedUser[];
 	role: string;
 }
 

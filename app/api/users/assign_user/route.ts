@@ -34,6 +34,9 @@ export async function GET(request: NextRequest) {
 
 	const user = await db.collection("users").findOne({ _id: new ObjectId(assigneesId) });
 	const assignedUsers = user?.assignedUsers;
+
+	if (assignedUsers === undefined) return NextResponse.json([]);
+
 	return NextResponse.json(assignedUsers);
 }
 

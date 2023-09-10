@@ -27,7 +27,7 @@ export default function DashboardPage() {
 		}
 	);
 
-	const assignedUsers = user ? user.assignedUsers : undefined;
+	const assignedUsers = user ? (user.assignedUsers ? user.assignedUsers : []) : undefined;
 
 	return (
 		<>
