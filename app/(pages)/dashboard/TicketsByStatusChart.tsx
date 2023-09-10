@@ -65,6 +65,8 @@ export default function TicketsByStatusChart({ tickets }: { tickets: Ticket[] | 
 		return <p className="flex h-52 w-full items-center justify-center">Loading...</p>;
 	}
 
+	if (tickets.length === 0) return <p className="flex h-52 w-full items-center justify-center">No tickets found.</p>;
+
 	const ticketCountByStatus = [
 		{
 			name: "Open",

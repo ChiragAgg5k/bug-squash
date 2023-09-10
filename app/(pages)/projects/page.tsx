@@ -145,7 +145,7 @@ export default function ProjectsPage() {
 								<tr>
 									<td colSpan={2}>
 										Current Page: {Math.floor(pagesToShow / PAGE_SIZE) + 1} of{" "}
-										{Math.ceil(projects.length / PAGE_SIZE)}
+										{Math.ceil(projects.length / PAGE_SIZE) || 1}
 									</td>
 									<td className="flex flex-col items-center justify-end text-right transition-all ease-in-out sm:flex-row">
 										<button

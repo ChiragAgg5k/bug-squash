@@ -30,6 +30,9 @@ export default function UsersCountChart({ assignedUsers }: { assignedUsers: Assi
 		return <p className="flex h-52 w-full items-center justify-center">Loading...</p>;
 	}
 
+	if (assignedUsers.length === 0)
+		return <p className="flex h-52 w-full items-center justify-center">No users assigned by you.</p>;
+
 	data = [
 		{
 			name: "Admins",

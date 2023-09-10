@@ -107,14 +107,12 @@ export default function TicketsTable() {
 
 			<CreateTicketModal />
 
-			<div className="overflow-x-scroll">
-				{tickets !== undefined && tickets?.filter((ticket) => ticket.status === "closed").length > 0 && (
-					<div className="mb-24 mt-12">
-						<h2 className="mb-4 text-2xl">Closed Tickets</h2>
-						<p>
-							Here are all of the tickets that have been closed. You can open them again if you need to.
-						</p>
+			{tickets !== undefined && tickets?.filter((ticket) => ticket.status === "closed").length > 0 && (
+				<div className="mb-24 mt-12">
+					<h2 className="mb-4 text-2xl">Closed Tickets</h2>
+					<p>Here are all of the tickets that have been closed. You can open them again if you need to.</p>
 
+					<div className="overflow-x-scroll">
 						<table className="mt-6 w-full border-b">
 							<thead>
 								<tr className="border-b border-gray-700 dark:border-gray-300">
@@ -172,8 +170,8 @@ export default function TicketsTable() {
 							</tbody>
 						</table>
 					</div>
-				)}
-			</div>
+				</div>
+			)}
 
 			<dialog id="confirm_delete_ticket_modal" className="modal">
 				<form method="dialog" className="modal-box">

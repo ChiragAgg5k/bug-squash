@@ -22,7 +22,7 @@ const CustomTooltip = ({ active, payload }: any) => {
 
 export default function TicketsByPriorityChart({ tickets }: { tickets: Ticket[] | undefined }) {
 	if (!tickets) {
-		return <p className="col-span-2 flex h-52 w-full items-center justify-center">Loading...</p>;
+		return <p className="sm:col-span-2 flex h-52 w-full items-center justify-center">Loading...</p>;
 	}
 
 	ticketCountByPriority = [
