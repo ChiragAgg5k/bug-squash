@@ -31,7 +31,7 @@ function TableBody(data: Project[], currPageIndex: number, setProjectToDelete: (
 					<p className="line-clamp-4">{data[i].description}</p>
 				</td>
 				<td className="px-4 py-2">
-					<Link href={`/projects/${data[i]._id}`} className="btn btn-outline mr-4">
+					<Link href={`/projects/${data[i]._id}`} className="btn btn-neutral dark:btn-outline mr-4">
 						Details
 					</Link>
 					<button
@@ -77,7 +77,7 @@ function AssignedProjectsTableBody(
 					<p className="line-clamp-4">{data[i].description}</p>
 				</td>
 				<td className="px-4 py-2">
-					<Link href={`/projects/${data[i]._id}`} className="btn btn-outline mr-4">
+					<Link href={`/projects/${data[i]._id}`} className="btn btn-neutral dark:btn-outline mr-4">
 						Details
 					</Link>
 				</td>
