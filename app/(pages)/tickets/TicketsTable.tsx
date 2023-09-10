@@ -92,7 +92,7 @@ export default function TicketsTable() {
 										)}
 										<td className="px-4 py-4">
 											<Link
-												className="btn btn-neutral dark:btn-outline mb-2 mr-2 whitespace-nowrap"
+												className="btn btn-neutral mb-2 mr-2 whitespace-nowrap dark:btn-outline"
 												href={`/tickets/${ticket._id}`}
 											>
 												Go To Ticket
@@ -150,7 +150,7 @@ export default function TicketsTable() {
 											)}
 											<td className="px-4 py-4">
 												<Link
-													className="btn btn-neutral dark:btn-outline mb-2 mr-2 whitespace-nowrap"
+													className="btn btn-neutral mb-2 mr-2 whitespace-nowrap dark:btn-outline"
 													href={`/tickets/${ticket._id}`}
 												>
 													Go To Ticket

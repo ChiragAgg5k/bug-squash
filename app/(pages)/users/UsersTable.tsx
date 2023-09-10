@@ -111,7 +111,7 @@ export default function UsersTable() {
 						<p className="mb-3">{user.role}</p>
 						<div className="flex items-center justify-start">
 							<button
-								className="btn btn-neutral dark:btn-outline m-2"
+								className="btn btn-neutral m-2 dark:btn-outline"
 								onClick={() => {
 									setSelectedUser(user);
 									(window as any).edit_user_modal.showModal();
