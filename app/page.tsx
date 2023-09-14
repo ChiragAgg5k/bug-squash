@@ -1,23 +1,12 @@
-"use client";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
 
-export default function Page() {
-	const { status } = useSession();
-	const router = useRouter();
+export default async function Page() {
+	const session = await getServerSession();
 
-	if (status === "loading") {
-		return (
-			<div className="flex flex-grow items-center justify-center">
-				<p>Loading...</p>
-			</div>
-		);
+	if (!session) {
+		redirect("api/auth/signin");
 	}
 
-	if (status === "unauthenticated") {
-		router.push("api/auth/signin");
-		return;
-	}
-
-	router.push("/profile");
+	redirect("/profile");
 }

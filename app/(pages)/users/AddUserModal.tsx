@@ -6,7 +6,7 @@ import { postUser } from ".";
 import { fetchedUser } from "@/app/types";
 
 export default function AddUserModal() {
-	const [email, setEmail] = useState<string | undefined>(undefined);
+	const [email, setEmail] = useState<string>("");
 	const [dropdownUser, setDropdownUser] = useState<fetchedUser | undefined>(undefined);
 	const [role, setRole] = useState<string | undefined>(undefined);
 
