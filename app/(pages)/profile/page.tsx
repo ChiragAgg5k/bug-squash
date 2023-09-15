@@ -2,6 +2,7 @@ import Image from "next/image";
 import { redirect } from "next/navigation";
 import { getServerSession } from "next-auth";
 import SignoutButton from "./SignoutButton";
+import HelpToast from "./HelpToast";
 
 export default async function ProfilePage() {
 	const session = await getServerSession();
@@ -28,6 +29,8 @@ export default async function ProfilePage() {
 			</div>
 
 			<SignoutButton />
+
+			<HelpToast />
 		</div>
 	);
 }
