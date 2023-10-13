@@ -4,7 +4,11 @@ import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function SignInForm() {
+export default function SignInForm({
+	demoSignIn,
+}:{
+	demoSignIn: boolean
+}) {
 	const [error, setError] = useState<string | undefined>(undefined);
 	const [loading, setLoading] = useState<boolean>(false);
 	const router = useRouter();
@@ -44,8 +48,9 @@ export default function SignInForm() {
 					<input
 						type="email"
 						name="email"
+						value={demoSignIn ? "demo@bug-squash.co" : ""}
 						id="email"
-						placeholder="demo@bug-squash.co"
+						placeholder="Enter your email"
 						className="input input-bordered w-full"
 					/>
 				</div>
@@ -57,7 +62,8 @@ export default function SignInForm() {
 						type="password"
 						name="password"
 						id="password"
-						placeholder="demo@123"
+						value={demoSignIn ? "demo123" : ""}
+						placeholder="Enter your password"
 						className="input input-bordered w-full"
 					/>
 				</div>

@@ -26,7 +26,7 @@ export default async function SignInPage({
 					<h1 className="text-center text-3xl font-bold">{demoSignIn ? "Demo Sign In" : "Bug Squash"}</h1>
 				</div>
 				<div className="mb-4 mt-8 h-[2px] w-full bg-gray-700"></div>
-				<SignInForm />
+				<SignInForm demoSignIn={demoSignIn} />
 				<div className="my-8 h-[2px] w-full bg-gray-700"></div>
 				<ProviderButtons providers={providers} />
 
