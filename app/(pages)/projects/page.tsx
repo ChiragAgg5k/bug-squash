@@ -106,7 +106,7 @@ export default function ProjectsPage() {
 	const { data: session } = useSession();
 	const { data: projects } = useSWR<Project[] | undefined>(
 		`/api/projects?userID=${session?.user.id}`,
-		async (url) => {
+		async (url: string) => {
 			const response = await fetch(url);
 			const data = await response.json();
 			return data;
@@ -115,7 +115,7 @@ export default function ProjectsPage() {
 
 	const { data: assigned_projects } = useSWR<Project[] | undefined>(
 		`/api/projects/assigned-projects?userID=${session?.user.id}`,
-		async (url) => {
+		async (url: string) => {
 			const res = await fetch(url);
 			const data = await res.json();
 			return data;

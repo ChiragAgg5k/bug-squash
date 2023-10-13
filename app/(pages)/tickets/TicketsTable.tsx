@@ -24,13 +24,14 @@ export default function TicketsTable() {
 
 	const { data: tickets } = useSWR<Ticket[] | undefined>(
 		session !== undefined ? `/api/tickets?userID=${session?.user.id}` : undefined,
-		async (url) => {
+		async (url: string) => {
 			const response = await fetch(url);
 			const data = await response.json();
 			return data;
 		}
 	);
 
+	// @ts-ignore
 	const { data: projects } = useSWR<Project[] | undefined>(tickets, multiFetcher);
 
 	const [ticketToDelete, setTicketToDelete] = useState<Ticket | undefined>(undefined);

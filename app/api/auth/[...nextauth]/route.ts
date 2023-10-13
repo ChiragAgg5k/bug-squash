@@ -62,6 +62,10 @@ const authOptions: NextAuthOptions = {
 	theme: {
 		logo: "/logo.png",
 	},
+	secret: env.NEXTAUTH_SECRET,
+	pages: {
+		signIn: "/signin",
+	},
 };
 
 const handler = NextAuth(authOptions);

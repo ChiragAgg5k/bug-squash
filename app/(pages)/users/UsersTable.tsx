@@ -26,13 +26,14 @@ export default function UsersTable() {
 	const { data: session, status } = useSession();
 	const { data: userIds } = useSWR<AssignedUser[] | undefined>(
 		status === "loading" ? undefined : `/api/users/assign_user?assigneesId=${session ? session.user.id : ""}`,
-		async (url) => {
+		async (url: string) => {
 			const response = await fetch(url);
 			const data = await response.json();
 			return data;
 		}
 	);
 
+	// @ts-ignore
 	const { data: users } = useSWR<fetchedUser[] | undefined>(userIds, multiFetcher);
 	const [selectedUser, setSelectedUser] = useState<fetchedUser | undefined>(undefined);
 

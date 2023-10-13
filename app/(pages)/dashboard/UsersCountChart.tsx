@@ -6,8 +6,7 @@ import Link from "next/link";
 let data: { name: string; value: number }[] = [];
 const PieChart = dynamic(() => import("recharts").then((recharts) => recharts.PieChart), { ssr: false });
 
-// colors should be different shades of teal
-// DIFFERENT SHADES OF TEAL
+// Different shades of teal
 const COLORS = ["#00b3b3", "#009a9a", "#008080", "#006767"];
 
 const RADIAN = Math.PI / 180;

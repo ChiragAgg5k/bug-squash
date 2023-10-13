@@ -7,7 +7,7 @@ import useSWR from "swr";
 export default function AssignedTickets({ projectID }: { projectID: string }) {
 	const { data: tickets } = useSWR<Ticket[] | undefined>(
 		`/api/tickets/assigned-tickets?projectID=${projectID}`,
-		async (url) => {
+		async (url: string) => {
 			const res = await fetch(url);
 			const data = await res.json();
 			return data;
